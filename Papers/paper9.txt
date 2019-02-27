@@ -1,0 +1,1994 @@
+
+
+103
+
+epistemic network analysis and topic modeling for chat
+data from collaborative learning environment
+zhiqiang cai
+
+brendan eagan
+
+nia m. dowell
+
+the university of memphis
+365 innovation drive, suite 410
+memphis, tn, usa
+
+university of wisconsin-madison
+1025 west johnson street
+madison, wi, usa
+
+the university of memphis
+365 innovation drive, suite 410
+memphis, tn, usa
+
+zcai@memphis.edu
+
+eaganb@gmail.com
+
+niadowell@gmail.com
+
+james w. pennebaker
+
+david w. shaffer
+
+arthur c. graesser
+
+university of texas-austin
+116 inner campus dr stop g6000
+austin, tx, usa
+
+university of wisconsin-madison
+1025 west johnson street
+madison, wi, usa
+
+the university of memphis
+365 innovation drive, suite 403
+memphis, tn, usa
+
+pennebaker@utexas.edu
+
+dws@education.wisc.edu
+
+art.graesser@gmail.com
+
+abstract
+this study investigates a possible way to analyze chat data from
+collaborative learning environments using epistemic network
+analysis and topic modeling. a 300-topic general topic model
+built from tasa (touchstone applied science associates) corpus was used in this study. 300 topic scores for each of the 15,670
+utterances in our chat data were computed. seven relevant topics
+were selected based on the total document scores. while the aggregated topic scores had some power in predicting students’
+learning, using epistemic network analysis enables assessing the
+data from a different angle. the results showed that the topic
+score based epistemic networks between low gain students and
+high gain students were significantly different (𝑡 = 2.00). overall,
+the results suggest these two analytical approaches provide complementary information and afford new insights into the processes
+related to successful collaborative interactions.
+
+keywords
+chat; collaborative learning; topic modeling; epistemic network
+analysis
+
+1. introduction
+collaborative learning is a special form of learning and interaction
+that affords opportunities for groups of students to combine cognitive resources and synchronously or asynchronously participate in
+tasks to accomplish shared learning goals [15; 20]. collaborative
+learning groups can range from a pair of learners (called a dyad),
+to small groups (3-5 learners), to classroom learning (25-35 learners), and more recently large-scale online learning environments
+with hundreds or even thousands of students [5; 22]. the collaborative process provides learners with a more efficient learning
+experience and improves learners’ collaborative learning skills,
+which are critical competencies for students [14]. members in a
+team are different in many ways. they have their own experience,
+knowledge, skills, and approaches to learning. a student in a col-
+
+laborative learning environment can take other students’ views
+and ideas about the information provided in the learning material.
+the ideas coming out of the team can then be integrated as a
+deeper understanding of the material, or a better solution to a
+problem.
+traditional collaborative learning occurred in the form of face to
+face group discussion or problem solving. as the internet and
+learning technologies develop, online collaborative learning environments come out and are playing more and more important
+roles. for example, moocs (massive open online courses) have
+drawn massive number of learners. learners in moocs are connected by the internet and can easily interact with each other using
+various types of tools, such as forums, blogs and social networks
+[23]. these digitized environments make it possible to track the
+learning processes in collaborative learning environments in
+greater detail.
+communication is one of the main factors that differentiates collaborative learning from individual learning [4; 6; 9]. as such,
+chats from collaborative learning environments provide rich data
+that contains information about the dynamics in a learning process. understanding massive chat data from collaborative learning
+environments is interesting and challenging. many tools have
+been invented and used in chat data analysis, such as liwc (linguistic inquiry and word count) [12], coh-metrix [10], and topic
+modeling, just to name a few. epistemic network analysis (ena)
+has been playing a unique role in analyzing chat data from epistemic games [18]. ena is rooted in a specific theory of learning:
+the epistemic frame theory, in which the collection of skill,
+knowledge, identity, value and epistemology (skive) forms an
+epistemic frame. a critical theoretical assumption of ena is that
+the connections between the elements of epistemic frames are
+critical for learning, not their presence in isolation. the online
+ena toolkit allows users to analyze chat data by comparing the
+connections within the epistemic networks derived from chats.
+ena visualization displays the clustering of learners and groups
+and the network connections of individual learners and groups.
+ena requires coded data which has traditionally relied on hand
+coded data sets or classifiers that rely on regular expression mapping. combining topic modeling with ena will provide a new
+mode of preparing data sets for analysis using ena.
+in this study, we used a combination of topic modeling and ena
+to analyze chat data to see if we could detect differences between
+the connections made by students with high learning gains versus
+students with low learning gains. incorporating topic modeling
+
+
+
+104
+
+with ena will make the analytic tool more fully automated and of
+greater use to the research community.
+
+2. related work
+chats have two obvious features. first, they appear in the form of
+text. therefore, any text analysis tool may have a role in chat
+analysis. second, chats come from individuals’ interaction, which
+reflects social dynamics between participants. therefore, a combination of text analysis and social network analysis should be
+helpful in understanding underlying chat dynamics. for instance,
+tuulos et al. [21] combined topic modeling with social network
+analysis in chat data analysis. they found that topic modeling can
+help identify the receiver of chats (the person who a chat is given
+to).
+in a similar effort, scholand et al. [16] combined liwc and social
+network analysis to form a method called “social language network analysis” (slna). the social networks were formed by
+counting the number of times chat occurred between any two
+participants. based on the counts, participants were clustered into
+a tree structure, representing the level of subgroups the participants belong to. liwc was then used to get the text features of
+chats. it was found that, some liwc features were significantly
+different between in group conversations and out of group conversations.
+researchers have also recently explored the advantages of combining sna (social network analysis) with deeper level computational linguistic tools, like coh-metrix. coh-metrix computes
+over 100 text features. the five most important coh-metrix features are: narrativity, syntax simplicity, word concreteness, referential cohesion and deep cohesion. dowell and colleagues [8]
+explored the extent to which characteristics of discourse diagnostically reveals learners’ performance and social position in
+moocs. they found that learners who performed significantly
+better engaged in more expository style discourse, with surface
+and deep level cohesive integration, abstract language, and simple
+syntactic structures. however, linguistic profiles of the centrally
+positioned learners differed from the high performers. learners
+with a more significant and central position in their social network
+engaged using a more narrative style discourse with less overlap
+between words and ideas, simpler syntactic structures and abstract
+words. an increasing methodological contribution of this work
+highlights how automated linguistic analysis of student interactions can complement social network analysis (sna) techniques
+by adding rich contextual information to the structural patterns of
+learner interactions.
+
+final sample. within the population, 50.5% of the sample identified as caucasian, 22.2% as hispanic/latino, 15.4% as asian
+american, 4.4% as african american, and less than 1% identified
+as either native american or pacific islander.
+course details and procedure. students were told that they
+would be participating in an assignment that involved a collaborative discussion on personality disorders and taking quizzes. students were told that their assignment was to log into an online
+educational platform specific to the university at a specified time,
+where they would take quizzes and interact via web chat with one
+to four random group members. students were also instructed
+that, prior to logging onto the educational platform, they would
+have to read material on personality disorders. after logging into
+the system, students took a 10 item, multiple choice pretest quiz.
+this quiz asked students to apply their knowledge of personality
+disorders to various scenarios and to draw conclusions based on
+the nature of the disorders. the following is an example of the
+types of quiz questions students were exposed to:
+
+
+
+
+
+jacob was diagnosed with narcissistic personality disorder. why might dr. simon think this was the wrong
+diagnosis?
+dr. level has measured and described his 10 mice of
+varying ages in terms of their length (cm) and weight
+(g). how might he describe them on these characteristics using a dimensional approach?
+danielle checks her facebook page every hour. does
+danielle have narcissistic personality disorder?
+
+after completing the quiz, they were randomly assigned to other
+students who were waiting to engage in the chatroom portion of
+the task. when there were at least 2 students and no more than 5
+students (m = 4.59), individuals were directed to an instant messaging platform that was built into the educational platform. the
+group chat began as soon as someone typed the first message and
+lasted for 20 minutes. the chat window closed automatically after
+20 minutes, at which time students took a second 10 multiplechoice question quiz. each student contributed 154.0 words on
+average (sd = 104.9) in 19.5 sentences (sd = 12.5). as a group,
+discussions were about 714.8 words long (sd = 235.7) and 90.6
+sentences long (sd = 33.5).
+an excerpt of a collaborative interaction chat in a chat room is
+shown below in table 1. (student names have been changed):
+table 1. an excerpt of a collaborative interaction chat
+student
+
+chat text
+
+in another study, dowell et al. [7] showed that students’ linguistic
+characteristics, namely higher degrees of narrativity and deep
+cohesion, are predictive of their learning. that is, students engaged in deep cohesive interactions performed better.
+
+art
+
+ok cool, everyone's here. sooo first question
+
+art
+
+ok so the certain characteristics to be considered to
+have a personality disorder?
+
+in the present research, we explore collaborative interaction chat
+data using the combination of topic modeling and epistemic network analysis. while previous studies focused on the relationship
+between language features and social network connections, our
+study focuses on prediction learning performance by semantic
+network connections students make in chats.
+
+shaffer
+
+alright sooo first question: based on these criteria describe several reasons why a psychologist might not
+label someone with grandiose thoughts as having narcissistic personality disorder?
+
+shaffer
+
+hahaha never mind
+
+shaffer
+
+that was the second question.
+
+3. methods
+
+art
+
+lol its all good
+
+shaffer
+
+okay so certain characteristics: doesn't it have to be like
+a stable thing?
+
+carl
+
+i think the main thing about having a disorder is that its
+disruptive socially and/or makes the person a danger to
+himself or others
+
+participants. participants were enrolled in an introductory-level
+psychology course taught in the fall semester of 2011 at a large
+university in the usa. while 854 students participated in this
+course, some minor data loss occurred after removing outliers and
+those who failed to complete the outcome measures. the final
+sample consisted of 844 students. females made up 64.3% of this
+
+
+
+105
+
+vasile
+
+yes, stable over time
+
+shaffer
+
+yeah, and it also mentioned it can't be because of drugs
+
+art
+
+also they have to have like unrealistic fantasies
+
+nia
+
+yeah and not normal in their culture
+
+carl
+
+no drugs or physical injury
+
+vasile
+
+begins in early adulthood or adolescence
+
+shaffer
+
+i think that covers them? haha
+
+art
+
+ok, so arrogance doesn't just define it, they have to have
+most of these characteristics
+
+art
+
+yeah i think we got them
+
+shaffer
+
+is it most or is it like 6?
+
+from the above excerpt, we can see several obvious things. first,
+the lengths of the utterances varied from one single word to multiple sentences. this needs to be considered in text analysis because some methods work only for longer texts. for example,
+coh-metrix usually works well for texts with more than 200
+words. topic modeling also needs enough length to reliably infer
+topic scores. second, the number of utterances each participant
+gave were different. from how much and what a member said, we
+can see each member played a different role in that chat. third,
+the ordered sequence of the utterances forms a time series. understanding and visualizing the underlying discourse dynamics are
+important for meaning making with this type of data.
+the data set contained 15,670 utterances, pretest scores (the first
+quiz) and post test scores (the second quiz) for 844 students,
+grouped in 182 chat rooms. each chat room had 2 to 5 students,
+4.73 by average. the average speech turns each student gave was
+18.2 and the average speech turns in each room was 86.1.
+the average pretest score was 36.01% correct and the average
+post-test scores 45.73% correct. paired sample test shows that the
+post-test is significantly higher (𝑡 = 14.13, 𝑁 = 844). we computed the learning gain of each student, using the formula
+𝑔𝑎𝑖𝑛 =
+
+𝑝𝑜𝑠𝑡𝑡𝑒𝑠𝑡 𝑠𝑐𝑜𝑟𝑒 − 𝑝𝑟𝑒𝑡𝑒𝑠𝑡 𝑠𝑐𝑜𝑟𝑒
+1−𝑝𝑟𝑒𝑡𝑒𝑠𝑡 𝑠𝑐𝑜𝑟𝑒
+
+.
+
+for all students (𝑁 = 844), the average learning gain is 0.11,
+59.5% had positive learning gains above 0.1. 16.5% had the same
+scores and 23% had negative learning gains. not surprisingly,
+students who had lower pretest scores had higher learning gains
+because they had greater potential to learn. figure 1 shows the
+average learning gain as function of pretest score.
+
+0.6
+0.4
+
+this data set has been analyzed in multiple studies. cade et al. [3]
+analyzed the cohesion of the chats and found that deep cohesion
+of the chats predicts the students feeling of power and connectedness to the group. dowell et al. [7] found that some coh-metrix
+measures predicts learning. coh-metrix measures describe common textual features that are not content specific. for example,
+cohesion is about how text segments are semantically linked to
+each other, which has nothing to do with what the text content is
+about. in this study, we use topic modeling to provide content
+dependent features and use epistemic network analysis to explore
+how the topics were associated in the chats.
+
+4. topic modeling
+topic modeling has been widely used in text analysis to find what
+topics are in a text and what proportion/amount of each topic is
+contained. latent dirichlet allocation (lda) [2; 24] is one of the
+most popular methods for topic modeling. lda uses a generative
+process to find topic representations. lda starts from a large
+document set 𝐷 = {𝑑1 , 𝑑2 , ⋯ , 𝑑𝑚 }. a word list 𝑊 =
+{𝑤1 , 𝑤2 , ⋯ , 𝑤𝑛 } is then extracted from the document set. lda
+assumes that the document set contains a certain number of topics,
+say, k topics. each document has a probability distribution over
+the k topics and each topic has a probability distribution over the
+given list of words. when a document was composed, each word
+that occurred in a document was assumed to be drawn based on
+the document-topic probability and the topic-word probability.
+for a given corpus (document set) and a given number of topics
+k, lda can compute the topic assignment of each word in each
+document.
+for a given topic, the word probability distribution can be easily
+computed from the number of times each word was assigned to
+the given topic. the beauty of topic modeling is that the “top
+words” (words with highest probabilities in a topic) usually give a
+meaningful interpretation of a topic. the distributions are the
+underlying representation of the topics. the top words are usually
+used to show what topics are contained in the corpus.
+by counting the number of words assigned to each topic, a topic
+proportion score can be computed for each document on each
+topic. the topic proportion scores then become a document feature that can be used in further analysis. however, the proportion
+scores are based on the statistical topic assignment of words.
+when documents are very short, such as most utterances in our
+chat data, the topic proportion scores won’t be reliable. cai et al.
+[4] argued that alternative ways to compute document topic scores
+are possible.
+
+4.1 tasa topic model
+
+0.2
+0.0
+-0.2
+
+for students with pretest scores less than 50% correct (n=624),
+the average learning gain is 0.88, 69.7% had positive learning
+gains, 15.7% had the same scores and 14.6% had negative learning gains.
+
+.00 .10 .20 .30 .40 .50 .60 .70 .80
+
+-0.4
+-0.6
+figure 1. average learning gain as a function of pretest score.
+
+although our chat data set contained 15,670 utterances, the utterances were short and the corpus is not large enough to build a
+reliable topic model. to get a reliable model, we used a well
+known corpus provided by tasa (touchstone applied science
+associates). this corpus contained documents on seven known
+categories, including business, health, home economics, industrial
+arts, language arts, science and social studies. our content topic,
+personality disorders, is obviously in the health category. of
+course, not all topics in tasa are relevant to our study. therefore, after building up the model, we need to select relevant topics. we will cover that in the next sub-section.
+
+
+
+106
+
+there are a total of 37,651 documents in tasa corpus, each of
+which is about 250 words long. before we ran lda, we filtered
+out very high frequency words and very low frequency words.
+high frequency words, such as “the”, “of”, “in”, etc., won’t contain much topic information. rare words won’t contribute to
+meaningful statistics. 28,483 words (it might be better to say
+“terms”) were left after filtering. a model with 300 topics was
+constructed by lda.
+
+4.2 topic score computation and topic selection
+from the tasa topic model, we computed the word-topic probabilities based on the number of times a word was assigned to each
+of the 300 topics. thus, each word is represented by a 300 dimensional probability distribution vector. for each chat in our chat
+corpus, we simply summed up the word probability vectors for the
+words appeared in each chat. that gave us 300 topic scores for
+each chat. recall that, the chats were associated with a reading
+material and two quizzes. while the students were free to talk
+about anything, the content of the reading material and the quizzes
+set up the main chat topics, that is, personality disorders.
+
+topic score
+1400
+1200
+1000
+800
+600
+
+200
+0
+0
+
+20
+
+40
+
+60
+
+figure 2. sorted topic scores for topic selection.
+the first thing we needed to do then was to investigate whether or
+not the “hot” topics from the computation made sense. to find
+that out, we computed the sum of all topic scores over all chats.
+the topics were sorted according the total topic score. the hottest
+topic had a total score higher than 1300, much higher than the
+second highest (less than 900). by examining the top words, this
+topic is about “illness”, which is highly relevant to personality
+disorders. six hot topics scored in the range from 600 to 900.
+they are about “outdoors”, “biology”, “people/social”, “education” and “healthcare”. the top words are listed below.
+
+
+
+
+
+
+
+
+
+“illness”, “biology”, “psychology” and “healthcare” are the topics
+the learning materials involved. “education” topic is about the
+education environment where the chat happened. “outdoor” and
+“people/social” are off-task topics.
+to get an idea about whether or not the topic scores were related
+to the learning gain, we aggregated the scores by person and computed the correlation between the total topic score and the learning
+gain for each topic. we were only interested in looking at the
+students with larger potential to learn, so we removed the data
+with pretest score greater than or equal to 0.5, leaving 624 students out of 844. the results (table 1) showed that all topics were
+significantly correlated to learning gain. it doesn’t seem to be
+great, because that seems to suggest that, whatever topic a student
+talked about, more a student talked, larger gain the student obtained. the real reason is that in the aggregation, all topic scores
+were summed up. therefore, all topic scores were influenced by
+the chat length. so the correlation in table 2 basically showed the
+chat length effect.
+table 2. correlation between total topic scores and learning
+gain (n=624, pretest<0.5)
+
+400
+
+
+
+
+
+person, animal, mental, response, positive, stress, personality, subject, reaction
+people/social: joe, pete, mr, charlie, dad, frank, billy,
+tony, jerry, 'll, mom, 'd, going, 're, got, boys, looked,
+asked, paper, go
+education: students, teacher, teachers, child, children,
+student, school, education, schools, learning, parents,
+tests, test, program, teaching, behavior, skills, reading,
+team, information
+healthcare: patient, doctor, health, hospital, medical,
+dr, patients, nurse, disease, doctors, team, care, office,
+nursing, drugs, medicine, services, dental, diseases, help
+
+illness: health, disease, patient, body, diseases, medical,
+stress, mental, physical, heart, doctor, problems, cause,
+person, patients, exercise, illness, problem, nurse,
+healthy
+outdoors: dog, energy, plants, earth, car, light, food,
+heat, words, animals, music, rock, language, children,
+air, uncle, city, sun, women, plant
+biology: cells, cell, genes, chromosomes, traits, color,
+organisms, sex, egg, species, gene, body, male, female,
+parents, nucleus, eggs, sperm, organism, sexual
+psychology: behavior, learning, theory, environment,
+feelings, sexual, physical, social, sex, human, research,
+
+topic
+
+post-test
+
+pretest
+
+gain
+
+illness
+
+.183**
+
+.116**
+
+.132**
+
+outdoors
+
+.216**
+
+.133**
+
+.154**
+
+biology
+
+.159**
+
+.125**
+
+.105**
+
+psychology
+
+.182**
+
+.096*
+
+.140**
+
+people/social
+
+.115**
+
+.022
+
+.107**
+
+education
+
+.175**
+
+.118**
+
+.121**
+
+healthcare
+
+.157**
+
+.130**
+
+.097*
+
+to remove the chat length effect, the simplest way is to divide all
+scores by the number of words (terms) in each chat. however, in
+this study, to be consistent with subsequent analysis, we normalized the topic scores to topic proportion scores by dividing each
+topic score for each utterance by the sum of all seven topic scores
+of the same utterance.
+the results (table 3) showed that the topic “people/social” had a
+significant negative correlation to learning gain. others were not
+significant but were in the direction we would expect. “illness”,
+“biology”, “psychology” and “healthcare” were positively correlated with gain scores, while “outdoors” and “people/social” topics were negatively correlated with gains scores. we observed
+almost no correlation for the “education” topic. this seems to
+indicate that the aggregated topic scores have limited power in
+predicting learning. therefore, we used ena to examine the connections or association of these topics in the students discourse to
+
+
+
+107
+
+develop a predictive model of learning gains based on the use of
+these topics.
+table 3. correlation between normalized topic proportion
+scores and learning gain (n=624, pretest<0.5)
+topic
+
+post-test
+
+pretest
+
+gain
+
+illness
+
+.099*
+
+0.077
+
+0.067
+
+outdoors
+
+-0.063
+
+-0.043
+
+-0.044
+
+biology
+
+.085*
+
+0.054
+
+0.063
+
+psychology
+
+0.067
+
+0.019
+
+0.058
+
+people/social
+
+-.127**
+
+-0.076
+
+-.083*
+
+education
+
+0.027
+
+0.056
+
+-0.002
+
+healthcare
+
+0.073
+
+.096*
+
+0.027
+
+5. epistemic network analysis
+ena measures the connections between elements in data and
+represents them in dynamic network models. ena creates these
+network models in a metric space that enables the comparison of
+networks in terms of (a) difference graph that highlights how the
+weighted connections of one network differ from another; and (b)
+statistics that summarize the weighted structure of network connections, enabling comparisons of many networks at once.
+ena was originally developed to model cognitive networks involved in complex thinking. these cognitive networks represent
+associations between knowledge, skills, habits of mind of individual learners or groups of learners. in this study, we used ena to
+construct network models. for each individual student, we constructed an ena network using the selected seven topic scores for
+each utterance the student contributed to the group.
+
+5.1 process
+while the process of creating ena models is described in more
+detail elsewhere (e.g. [11; 17-19]), we will briefly describe how
+ena models are created based on topic modeling. here we defined network nodes as the seven topics identified from the topic
+model. we defined the connections between nodes, or edges, as
+the strength of the co-occurrence of topics within a moving stanza
+window (msw) of size 5 [19]. to model connections between
+topics we used the products of the topic scores summed across all
+chats in the msw. that is, for each topic, the topic scores are
+summed across all 5 chats in the msw. then ena computed the
+product of the summed topic loadings for each pair topics to
+measure the strength of their co-occurrence. for example, if the
+sum of the topics scores across five chats was 0.5 for “illness”, 0.3
+for “psychology”, and 0.2 for “healthcare”, these scores would
+result in three co-occurrences, “illness-psychology”, “illnesshealthcare”, and “psychology-healthcare”, with scores of 0.15,
+0.1, and 0.06, respectively.
+next ena created adjacency matrices for each student that quantified the co-occurrences of topics within the students’ discourse
+in the context of their chat group. subsequently, the adjacency
+matrices were then treated as vectors in a high dimensional space,
+where each dimension corresponds to co-occurrence of a pair of
+topics. the vectors were then normalized to unit vectors. notice
+that the normalization removed the effect of chat length embedded
+in the topic scores. a singular value decomposition (svd) was
+then performed for dimensional reduction. ena then projected a
+vector for each student into a low dimensional space that maximizes the variance explained in the data. finally, the nodes of the
+
+networks, which in this case correspond to the seven selected
+topics generated from tasa corpus, were placed in the low dimensional space. the topic nodes were placed using an optimization algorithm such that the overall distances between centroids
+(centers of the mass of the networks) and the corresponding projected student locations was minimized. a critical feature of ena
+is that these node placements are fixed, that is, the nodes of each
+network are in the same place for all units in the analysis. this
+fixing of the location of the nodes allows for meaningful comparisons between networks in terms of their connection patterns
+which allow us to interpret the metric space. as a result, ena
+produced two coordinated representations: (1) the location of each
+student in a projected metric space, in which all units of analysis
+included in the model were located, and (2) weighted network
+graphs for each student, which explained why the student was
+positioned where it was in the space.
+ena also allows us to compare the mean network graphs and
+mean position in ena space between different groups of students. in this study, we only considered the students with high
+potential to learn, i.e., the 624 students with pretest score < 0.5
+(50% correct). among these students, we compared the networks
+of low learning gain students (gain<-0.1, 𝑁=194) with the networks of high learning gain students (gain>0.43, 𝑁=105). we
+compared these groups using difference network graph, which
+was formed by subtracting the edge weights of the mean discourse
+network for the low gain group students from the mean discourse
+network from the high gain group. this difference network graph
+shows us which topic connections are stronger for each group. in
+addition, we conducted a t-test to test the difference between
+group means.
+
+5.2 results
+figure 3 shows mean discourse networks for students with low
+gain scores (left, red), students with high gain scores (right, blue),
+and a difference network graph (center) that shows how the discourse patterns of each group differs. students with low gains had
+stronger connections between the “people/social” topic and all
+other topics except for “illness”. more importantly, the connection that was the strongest for low gain students compared to high
+gain students was between “people/social” and “outdoors”. students with high gain scores made stronger connections between
+the topics of “illness”, “psychology”, “healthcare”, “biology”, and
+“education”.
+table 4. comparison of centroids between low gain and high
+gain students, 𝒑 = 𝟎. 𝟎𝟒𝟕, 𝒕 = 𝟐. 𝟎𝟎
+n
+
+mean
+
+sd
+
+high gain
+
+105
+
+0.033
+
+0.220
+
+low gain
+
+194
+
+-0.048
+
+0.322
+
+figure 4 shows centroids, or the centers of mass, of individual
+students’ discourse networks and their means with low gain score
+students in red and high gain score students in blue. the differences between these two groups were significant on the x dimensions (see table 4). this means that the differences we saw in
+figure 2 and described above are statistically significant. in other
+words, the high learning gain students’ discourse was more towards the right side of the ena space and the low learning gain
+students’ discourse was more towards the left side. that indicates
+that the discourse of students with high learning gains made more
+connections between on-task topics (“illness”, “psychology”,
+“healthcare”, “biology”, and “education”), while the discourse of
+
+
+
+108
+
+low gain students made more connections between off-task topics
+(“people/social” and “outdoors”).
+
+6. discussion
+ena makes it possible to visualize the chat dynamics to help
+researchers gain deeper understanding of what is going on in a
+collaborative learning environment. differences in what topics
+students connect in discourse can predict learning outcomes. previous use of ena has relied on human coded data or use of regular expressions to classify data. utilizing topic modeling can lead
+to fully automated ena, making it more accessible to a wider
+group of researchers and allows ena to be used with more and
+larger data sets.
+the fact that the epistemic network predicts learning validates
+further application of ena. for example, the turn by turn chat
+dynamics can be plotted as trajectories in the 2-d space, where the
+
+topics are placed. investigating the trajectory patterns and their
+relationship to learning or socio-affective components are interesting future research directions.
+we used a general topic model in this study. many studies in the
+literature used lda for topic modeling on relatively small corpora. this causes two problems. 1) lda topic models built upon
+small corpora are not reliable, because lda requires large number documents with relatively large size for each document. inadequate corpus can result in misleading results. 2) using a topic
+model that is not common would result in arbitrary interpretation.
+for example, the representation of “illness” from different corpus
+could be very different. therefore, it is hard to compare the claims
+made to “illness” across different studies. using a reliable, common topic models will set up a common language for different
+studies.
+
+figure 3: mean discourse networks for students with low gain scores (left, red), students with high gain scores (right, blue), and a
+difference network graph (center).
+chat utterances are too short. the statistical inference algorithm
+contains a high degree of randomness for short documents. as an
+extreme example, an utterance with a single word, would result in
+inferred topic proportion scores with “1” on one topic and “0” on
+others. the problem is that, this “1” was assigned to a topic with
+certain degree of uncertainty. that is, the topic this “1” was assigned to could be any topic. while aggregated analysis may not
+be sensitive to such uncertainty, detailed utterance by utterance
+analysis would suffer from it.
+our method of computing topic scores is based on the topic probability distribution over each word. we treat the topic distribution
+of each word as a vector. when computing the topic score, the
+simple sum of all word vectors gives scores to all topics. as we
+have pointed out, the summation algorithm will have a length
+effect. therefore, when such topic scores are used, removing
+length effects through normalization is necessary. in this article,
+we did not use weighted sum as suggested in cai et al. [4]. comparing the effect of different weighting is beyond the scope of this
+paper.
+figure 4: discourse network centroids low gain score students
+red, high gain score students blue.
+topic scores for documents are usually inferred from topic models. while for longer documents, the topic scores can be used in
+many applications (e.g., text clustering [1]), the inferred topic
+proportion scores won’t be useful for analyzing chats if we need
+to treat each utterance as a unit of analysis. it is not useful because
+
+when a general topic model is used, selecting topics relevant to
+the specific analysis becomes important. our approach was to
+look at the total scores of utterances and find the “hot” topics by
+sorting the total topic scores. in our study, we had a quickly decreasing curve that helped us to select topics. we believe this
+would be the case for most studies using a model containing far
+more topics than the topics contained in the target data.
+
+
+
+109
+
+although our study started with topic modeling to capture the
+“what” in the chats, the association networks constructed in the
+epistemic network analysis actually turned the “what” into a
+“how”: how the topics in the chats associated with each other.
+this is conceptually similar to the cohesion features dowell [7]
+and cade [3] used.
+topic modeling emphasizes content words. when a topic model is
+built, stop words are usually removed. an interesting question is,
+what if we do the opposite: keep stop words and remove content
+words? pennebaker (e.g., [13]) laid foundational work in this direction. the liwc tool pennebaker and his colleagues created
+provides over a hundred text measures by counting non-content
+words. liwc measures could provide different features to epistemic network analysis and reveal different aspects of the chat
+dynamics.
+
+7. acknowledgments
+the research on was supported by the national science foundation (drk-12-0918409, drk-12 1418288), the institute of education sciences (r305c120001), army research lab (w911inf12-2-0030), and the office of naval research (n00014-12-c0643; n00014-16-c-3027). any opinions, findings, and conclusions or recommendations expressed in this material are those of
+the authors and do not necessarily reflect the views of nsf, ies,
+or dod. the tutoring research group (trg) is an interdisciplinary research team comprised of researchers from psychology,
+computer science, and other departments at university of memphis (visit http://www.autotutor.org).
+
+8. references
+[1]
+
+alghamdi, r. and alfalqi, k. 2015. a survey of topic
+modeling in text mining. ijacsa) international journal
+of advanced computer science and applications. 6, 1
+(2015), 147–153.
+
+[2]
+
+blei, d.m., edu, b.b., ng, a.y., edu, a.s., jordan, m.i.
+and edu, j.b. 2003. latent dirichlet allocation. journal
+of machine learning research. 3, (2003), 993–1022.
+
+[3]
+
+cade, w.l., dowell, n.m.m. and pennebaker, j. 2014.
+modeling student socioaffective responses to group
+interactions in a collaborative online chat environment.
+proceedings of the 7th international conference on
+educational data mining (edm). 2, 21 (2014), 399–400.
+
+[4]
+
+[5]
+
+cai, z., li, h., graesser, a.c. and hu, x. 2016. can
+word probabilities from lda be simply added up to
+represent documents ? proceedings of the 9th
+international conference on educational data mining.
+(2016), 577–578.
+von davier, a.a. and halpin, p.f. 2013. collaborative
+problem-solving and the assessment of cognitive skills:
+psychometric considerations. ets research report
+series. december (2013), 36 p.
+
+[6]
+
+dillenbourg, p. and traum, d. 2006. sharing solutions:
+persistence and grounding in multimodal collaborative
+problem solving. the journal of the learning sciences.
+15, 1 (2006), 121–151.
+
+[7]
+
+dowell, n., cade, w. , tausczik, y., pennebaker, j., and
+graesser, a. 2014. what works: creating adaptive and
+intelligent systems for collaborative learning support.
+springer international publishing switzerland. (2014),
+124–133.
+
+[8]
+
+dowell, n.m.m., skrypnyk, s., joksimović, s., graesser,
+
+a., dawson, s., gašević, d., hennis, t. a., vries, p. de
+and kovanović, v. 2015. modeling learners ’ social
+centrality and performance through language and
+discourse. educational data mining - edm’15 (2015),
+250–257.
+[9]
+
+fiore, s.m., rosen, m. a., smith-jentsch, k. a., salas, e.,
+letsky, m. and warner, n. 2010. toward an
+understanding of macrocognition in teams: predicting
+processes in complex collaborative contexts. human
+factors. 52, 2 (2010), 203–224.
+
+[10]
+
+graesser, a.c., mcnamara, d.s., louwerse, m.m. and
+cai, z. 2004. coh-metrix: analysis of text on cohesion
+and language. behavior research methods, instruments,
+& computers. 36, 2 (2004), 193–202.
+
+[11]
+
+li, h., samei, b., olney, a., graesser, a. and shaffer, d.
+2014. question classification in an epistemic game.
+international conference on intelligent tutoring
+systems. (2014).
+
+[12]
+
+pennebaker, j.w., boyd, r.l., jordan, k. and blackburn,
+k. 2015. the development and psychometric properties
+of liwc2015. austin, tx: university of texas at austin.
+(2015).
+
+[13]
+
+pennebaker, j.w., chung, c.k., frazee, j. and lavergne,
+g.m. 2014. when small words foretell academic
+success : the case of college admissions essays.
+(2014), 1–10.
+
+[14]
+
+rosen, y. 2014. assessing collaborative problem
+solving through computer agent technologies.
+encyclopedia of information science and technology. 9,
+november (2014), 94–102.
+
+[15]
+
+sawyer, r.k. 2014. the new science of learning. the
+cambridge handbook of the learning sciences. 1–18.
+
+[16]
+
+scholand, a.j., tausczik, y.r. and pennebaker, j.w.
+2010. assessing group interaction with social language
+network analysis. lecture notes in computer science
+(including subseries lecture notes in artificial
+intelligence and lecture notes in bioinformatics). 6007
+lncs, (2010), 248–255.
+
+[17]
+
+shaffer, d.w. 2006. epistemic frames for epistemic
+games. computers and education. 46, 3 (2006), 223–
+234.
+
+[18]
+
+shaffer, d.w., hatfield, d., svarovsky, g.n., nash, p.,
+nulty, a., bagley, e., frank, k., rupp, a.a. and
+mislevy, r.j. 2009. epistemic network analysis: a
+prototype for 21st-century assessment of learning.
+international journal of learning and media. 1, 2
+(2009), 33–53.
+
+[19]
+
+siebert-evenstone, a.l., arastoopour, g., collier, w.,
+swiecki, z., ruis, a.r. and shaffer, d.w. 2016. in
+search of conversational grain size: modeling semantic
+structure using moving stanza windows. international
+conference of the learning sciences. (2016).
+
+[20]
+
+slavin, r.e. 1995. cooperative learning: theory,
+research and practice (2nd ed.). the nature of learning.
+(1995), 208.
+
+[21]
+
+tuulos, v.h. and tirri, h. 2004. combining topic
+models and social networks for chat data mining.
+proceedings of the 2004 ieee/wic/acm international
+conference on web intelligence. october (2004), 206–
+
+
+
+110
+
+213.
+[22]
+[23]
+
+whitepaper, a.r. 2014. what happens when we learn
+together. (2014).
+yousef, a.m.f., chatti, m.a., schroeder, u., wosnitza,
+m. and jakobs, h. 2014. a review of the state-of-theart. proceedings of the 6th international conference on
+
+computer supported education - csedu2014. (2014),
+9–20.
+[24]
+
+wang z., qiu b., bai, w., chuan, s. and le, y. 2014.
+collapsed gibbs sampling for latent dirichlet
+allocation on spark. jmlr: workshop and conference
+proceedings. 2004 (2014), 17–28.
+
+
+
+111
+
+towards closing the loop: bridging machine-induced
+pedagogical policies to learning theories
+guojing zhou, jianxun wang, collin f. lynch, min chi
+department of computer science
+north carolina state university
+raleigh, nc 27695
+
+{gzhou3,jwang75,cflynch,mchi}@ncsu.edu
+abstract
+in this study, we applied decision trees (dt) to extract
+a compact set of pedagogical decision-making rules from
+an original full set of 3,702 reinforcement learning (rl)induced rules, referred to as the dt-rl rules and full-rl
+rules respectively. we then evaluated the effectiveness of
+the two rule sets against a baseline random condition in
+which the tutor made random yet reasonable decisions. we
+explored two types of trees (weighted and unweighted) as
+well as two pruning strategies (pre- and post-pruning). we
+found that post-pruned weighted trees produced the best results with 529 dt-rl rules. the empirical evaluation was
+conducted in a classroom study using an existing intelligent
+tutoring system (its) named pyrenees. 153 students were
+randomly assigned to three conditions. the procedure was
+the same for all students with domain content and required
+steps strictly controlled. the only substantive differences
+between the three conditions were the policy: (full-rl vs.
+dt-rl vs. random). our result showed that as expected
+the machine induced policies (full-rl and dt-rl) are significantly more effective than the random policy; more importantly, no significant difference was found between the
+full-rl and dt-rl policies though the number of dt-rl
+rules is less than 15% of the number of the full-rl rules
+and the former group also took significantly less time than
+the latter.
+
+1.
+
+introduction
+
+intelligent tutoring systems (itss) are interactive e-learning
+environments that support students’ learning by providing
+instruction, scaffolded practice, and on-demand help. the
+system’s behaviors can be viewed as a sequential decisionmaking process where at each step the system chooses an
+appropriate action from a set of options. pedagogical strategies are the policies used to decide what action to take next
+in the face of alternatives. each system decision will affect
+the user’s subsequent actions and performance. its impact
+on outcomes cannot always be immediately observed and the
+effectiveness of each decision depends upon the effectiveness
+
+of subsequent actions. ideally, an effective learning environment will adapt its decisions to users’ specific needs [1, 11].
+however, there is no existing well-established theory on how
+to make these system decisions effectively. generally speaking, prior research on pedagogical policies can be divided
+into two general categories: top-down or theory-driven, and
+bottom-up or data-driven.
+in theory-driven approaches, itss employ hand-coded pedagogical rules that seek to implement existing cognitive or
+learning theories [1, 10, 17]. while existing learning literature gives helpful guidance on the design of pedagogical
+rules, such guidance is often too general to implement as
+effective immediate decisions. for example, the aptitudetreatment interaction (ati) theory states that instructors
+should match their interventions to the aptitude of the learner
+[5]. while the principle behind this theory is understandable, it is not clear how to implement that rule for each
+decision. how do we represent learner’s aptitude for each
+equation, how exact should be the system’s adaptation, and
+so on.
+data-driven approaches, on the other hand, derive pedagogical policies directly from prior data. here the policies
+specify the pedagogical decisions at a detailed level. reinforcement learning (rl), which we use here, is one popular
+approach that is able to derive pedagogical policies directly
+from student-system interaction logs. these policies are defined as a set of state-action mapping rules, which give the
+best decision to take in each state. the states are typically
+represented as sets of features and the actions are pedagogical actions such as presenting a worked example (we) or
+requiring the student to solve problems (ps). when the system presents a worked example, the students will be given a
+detailed example showing a complete expert solution for the
+problem or the best step to take given their current solution
+state. in problem solving, by contrast, students are tasked
+with solving a problem using the its or with completing an
+individual problem-solving step.
+for this project, our original complete rl-induced policy involves the following seven features representing the students’
+learning process from different perspectives1 .
+
+1
+in the format of: [feature-name] (discretization procedure): explanation of the feature.
+
+
+
+112
+
+1. [nwesinceps] (0 → 0; (0, 1] → 1; (1, +∞) → 2):
+the number of worked example (we) steps received
+since the last problem solving (ps) step.
+2. [timeinsession] ([0, 2290] → 0; (2290, 4775] → 1;
+(4775, 7939] → 2; (7939, +∞) → 3): the total time
+spent in the current session.
+3. [avgtimeonstepps] ([0, 29.01] → 0; (29.01,
+48.71] → 1; (48.71, +∞) → 2): the average amount of
+time spent on each ps step.
+4. [avgtimeonstepsessionps] ([0, 23.51] → 0;
+(23.51, 36.56] → 1; (36.56, 55] → 2; (55, +∞) → 3):
+the average amount of time spent on each ps step in
+the current session.
+5. [nstepsincelastwrongkc] ([0, 1] → 0; (1, 7]
+→ 1; (7, 25] → 2; (25, +∞) → 3): the number of steps
+received since the last wrong ps step on the current
+knowledge component (kc).
+6. [nwestepsincelastwrong] ([0, 1] → 0; (1, 4]
+→ 1; (4, 10] → 2; (10, +∞) → 3): the number of we
+steps since the last wrong ps step.
+7. [ncorrectpsstepsincelastwrongkcsession]
+(0 → 0; (0, 3] → 1; (3, 10] → 2; (10, +∞) → 3): the
+number of correct ps steps since the last wrong ps
+step on the current kc in the current session.
+with this feature set, a state can be represented as a 7dimensional vector where each element denotes a discretized
+feature value. then, the rules can then be represented as:
+(0:0:0:0:0:0:0) -> ps
+(0:0:0:0:0:0:1) -> ps
+(0:0:0:0:0:1:0) -> ps
+(0:0:0:0:0:1:1) -> we
+in this study we discretized the features into three-four values producing a seven-feature state. this results in a state
+space of 32 ∗ 45 = 9216, that is 9216 rules in one rl-induced
+policy. while these types of polices can specify the exact
+action to take in each case, they are usually too narrow to
+be aligned to existing learning theories. each of the rules
+covers only a very specific case and the relationship between
+rules is unknown. thus it is impossible to explain the power
+of those rules from the perspective of learning theory. the
+opacity of those induced rules not only hinders us in improving data-driven methodologies when they go wrong, it also
+prevents us from advancing learning science research more
+generally. moreover, it is possible that some of the decisions
+are environment-specific and may not generalize to other
+contexts. this in turn prevents translating these induced
+policies to environments other than the one from which they
+are induced. therefore, a general method is needed to shed
+some light on the extracted detailed data-driven policies.
+decision tree (dt) induction is a robust data mining approach which can be used to extract a compact set of rules
+from a set of specific examples. it builds a tree-like hierarchical decision-making pattern which represents the knowledge it learned. each path from root to leaf represents a
+single rule which may be dealt with separately. prior studies have shown that dts can match training examples in
+most cases, even with relatively small trees. davidson et
+
+al., for example, built a dt for predicting the extinction
+risk of mammals [6]. each of the species was described by
+11 ecological features (e.g body mass, geographic range and
+population density) and were labeled with their extinction
+risk (threatened vs. non-threatened). their tree contained
+20 general rules which covered 4500 training examples, with
+a decision accuracy over 80%. additionally, reinchard et al.
+built a dt for predicting the invasiveness of woody plants
+[13]. the resulting dt encoded 15 rules from 235 examples,
+with a decision accuracy over 76%. therefore, in our study,
+we will apply dt to extract general pedagogical decisionmaking rules from the detailed rl-induced policies.
+in short, our primary research question is: is dt an effective methodology for extracting more general pedagogical
+rules from the detailed rl-induced pedagogical rules? in order to investigate this question, we will build dts using the
+rules in a rl-induced policy as training examples and empirically evaluate the effectiveness of the extracted set of dt
+rules by comparing it to the full set of rl-induced rules in a
+classroom study. the state features in the rl-induced policies are the input features for the dt and the pedagogical
+actions are the output labels. in our empirical evaluation,
+we separate the pedagogical decisions from the instructional
+content, strictly controlling the content so that it is equivalent for all participants by 1) using an its which provides
+equal support for all learners; and 2) focusing on tutorial
+decisions that cover the same domain content, in this case
+we versus ps.
+
+2. background
+2.1 applying rl to itss
+beck et al. applied rl to induce pedagogical policies that
+would minimize the time students take to complete problems on animalwatch, an its for grade school arithmetic
+[2]. they trained the model with simulated students. the
+low cost of generated data allowed them to apply a modelfree rl method, temporal difference learning. during the
+test phase, the induced policies were added to animalwatch
+and the new system was empirically compared with the original system. their results showed that the policy group
+spent significantly less time per problem than their no-policy
+peers. note that their primary goal was to reduce the amount
+of time per problem, however faster problem-solving does
+not always result in better learning performance. nonetheless, their results showed that rl can be successfully applied
+to induce pedagogical policies for itss.
+iglesias et al., on the other hand, focused on applying rl to
+improve the effectiveness of an intelligent educational system that teaches students database design [8, 9]. they
+applied another model-free rl algorithm, q-learning to induce policies that provide students with direct navigation
+support through the system’s content. they used simulated
+students to induce the policy and empirically evaluated its
+effectiveness on real students. their results showed that
+while the policy led to more effective system usage behaviors from students, the policy students did not outperform
+the no-policy peers in terms of learning outcomes.
+shen investigated the impact of both immediate and delayed reward functions on rl-induced policies and empirically evaluated the effectiveness of the induced policies within
+
+
+
+113
+
+an intelligent tutoring system called deep thought [15].
+the induced pedagogical policies are used to decide whether
+the next task should be we or ps. they found that some
+learners benefited significantly more from effective pedagogical policies than others.
+finally, chi et al. applied model-based rl to induce pedagogical policies to improve the effectiveness of an intelligent
+natural language tutoring system for college-level physics
+called cordillera [4]. the authors collected an exploratory
+corpus by training human students on an its that makes
+random decisions and then applied rl to induce pedagogical policies from the corpus. they showed that the induced
+policies were significantly more effective than the prior ones.
+in short, prior studies have shown that rl-induced pedagogical policies can improve students’ learning or reduce
+training time. however, all of these studies focused on the
+effectiveness of the rl-induced policies. none of them considered extracting more general rules from the induced policies.
+
+2.2
+
+extracting general rules
+
+in addition to the work of davidson et al. [6] and reinchard
+et al. [13], dts have been used for other tasks. vayssiers
+et al., for example, applied classification and regression
+trees to predict the presence of 3 species of oak in california [18]. their training examples were vegetation type map
+records for 2085 unique locations. each record consisted of
+25 climatic and geographic features as well as 3 labels showing the presence of the species (quercus agrifolia, quercus
+douglasii and quercus lobata). one dt was induced for
+each type. the dts were tested on another dataset which
+contains the same type of records for 2016 locations. for
+quercus agrifolia, the induced tree had 10 leaf nodes and
+94.9% of its predictions are correct for the locations that
+have the presence of this oak (sensitivity) while 86.7% of
+its predictions are correct for cases without the oak (specificity). for quercus douglasii, the induced tree had 22 leaf
+nodes and a sensitivity and specificity of 87% and 79.9%
+respectively. for quercus lobata, the tree had 6 leaves but
+reached a sensitivity of 77% and a specificity of 73.3%.
+thus, prior studies have shown that dt can effectively extract a small set of general decision-making rules from a
+large set of specific examples. however, all the examples
+used by these studies were observations of existing phenomena. so far as we know, this work is the only relevant research on the application of dt to extract a compact set
+of decision-making rules directly from full rl-induced rules
+and empirically evaluated the two sets of the rules.
+
+2.3
+
+applying dt to rl
+
+prior research on incorporating dt with rl has largely
+focused on seeking a better representation of state space
+or policy for rl. boutilier et al [3]. proposed representational and computational techniques for markov decision
+processes (mdps) to reduce the size of the state space.
+they used dynamic bayesian networks and dts to represent stochastic actions as well as dts to represent rewards.
+based upon this representation, they then developed algorithms to find conditional optimal policies. their method
+was empirically evaluated on several planning problems and
+
+they showed significant savings in both time and space for
+some types of problems. gupta et al. proposed the policy
+tree algorithm for rl. this algorithm is designed to directly
+induce a functional representation of the conditional optimal
+policies as a dt. they evaluated it on a variety of domains
+and showed that it was able to make splits properly [7].
+in short, prior researchers have shown that properly combining dt with rl can result in a large amount of savings
+in time and space for finding good policies. however, none
+of these studies directly applied dt on rl-induced policies.
+
+3.
+
+induce full set of rl-policy
+
+previously, researchers have typically used the markov decision process (mdp) [16] framework to model user-system
+interactions. the central idea behind this approach is to
+transform the problem of inducing effective pedagogical policies on what action the agent should take to the problem of
+computing an optimal policy for an mdp.
+
+3.1 markov decision process
+an mdp is a mathematical framework for representing an
+rl task. it is defined by: a tuple hs , a, t , ri. where s =
+{s1 , s2 , ..., sn } denotes the state space; a = {a1 , a2 , ..., am }
+represents a set of agent’s possible actions; and t : s × a ×
+s → [0, 1] is a transition probability table, where each element is tsai sj = p(sj |si , a). this in turn indicates the
+probability of transiting from state si to state sj by taking an action a while r : s × a × s → r assigns rewards
+to state transitions given actions. the policy is defined as
+π : s → a, mapping state s into action a with the goal of
+maximizing the expected reward.
+after defining an mdp, we can transfer the student-system
+interaction dialog into the trajectory which can then be represented as follows:
+a ,r
+
+a ,r
+
+a ,r
+
+1
+2
+3
+s1 −−1−−→
+s2 −−2−−→
+s3 −−3−−→
+... → sn
+
+a ,r
+
+i
+where si −−i−−→
+si+1 means that the tutor executed action
+ai and received reward ri in state si , and then transferred
+to the next state si+1 . in general, the reward can be divided
+into two categories, immediate and delayed, where immediate rewards are received during the state transition, and
+delayed are available after reaching to goal state.
+
+3.2 training datasets
+our training dataset was collected from three exploratory
+studies in which students were trained on an its which made
+random yet reasonable pedagogical decisions. the studies
+were given as homework assignments during csc226: discrete mathematics, a core cs course offered at ncsu during the fall 2014, spring 2015 and fall 2015 semesters. the
+dataset contains a total of 149 students’ interaction logs.
+all students used the same its, followed the same general
+procedure, studied the same training materials, and worked
+through the same training problems. in order to model the
+students’ learning process, we extracted a total of 142 state
+feature variables, which can be grouped into five categories:
+1. autonomy (am): the amount of work done by the student: such as the number of problems solved so far pscount
+or the number of hints requested hintcount.
+
+
+
+114
+
+2. temporal situation (ts): the time related information about the work process: such as the average time taken
+per problem avgtime, or the total time spent solving a problem totalpstime.
+3. problem solving (ps): information about the current
+problem solving context, such as the difficulty of the current
+problem probdiff, or whether the student changes the difficulty level newlevel.
+4. performance (pm): information about the student’s
+performance during problem solving: such as the number of
+right application of rules rightapp.
+5. student action (sa): the statistical measurement of
+student’s behavior: such as the number of non-empty-click
+actions that students take actioncount, or the number of
+clicks for derivation appcount.
+
+based methods and an ensemble method and capped the
+maximum number of state feature size to be eight. more
+details of our feature selection methods are described in [14].
+the final resulting rl policy involves seven state features
+and 3706 rules.
+
+3.3
+
+4.1 unweighted vs. weighted tree
+
+inducing rl policies
+
+in order to apply rl to induce pedagogical policies, we
+first defined the pedagogical decision-making problem as an
+mdp. the state representation includes all of the relevant
+features available at the beginning of each step. the actions are we and ps at the step level. the transition tables were calculated on our training dataset, and our reward
+function includes two types of reward: delayed and immediate. our most important reward is based on normalized
+), which measures the
+learning gain (nlg) ( posttest−pretest
+1−pretest
+students’ learning gains irrespective of their incoming competence. this reward was given as a delayed reward as nlg
+scores can only be calculated after students finish the entire
+training process. however, shen et al. [15] showed that giving immediate rewards can lead to the production of more
+effective policies when compared to delayed rewards. this
+is known as the credit-assignment problem. the more that
+we delay success measures from a series of sequential decisions, the more difficult it becomes to identify which of the
+decision(s) in the sequence are responsible for our final success or failure. therefore, for the purposes of this study we
+also assigned immediate rewards based upon the students’
+performance during training on the system.
+the value iteration algorithm was applied to find the optimal
+policy. this algorithm operates by finding the optimal value
+for each state v ∗ (s). the optimal value for a given state is
+the expected discounted reward that the agent will gain if
+it starts in s and follows the optimal policy to the goal.
+generally speaking, v ∗ (s) can be obtained by the optimal
+value function for each state-action pair q∗ (s, a) which is
+defined as the expected discounted reward the agent will
+gain if it takes an action a in a state s and follows the optimal
+policy to the end. the optimal state value v ∗ (s) and value
+function q∗ (s, a) can be obtained by iteratively updating
+v (s) and q(s, a) via equations 1 and 2 until they converge:
+x
+q(s, a) := r(s, a) + γ
+p(sj |si , a)v (s0 )
+(1)
+v (s)
+
+:=
+
+s0 ∈s
+
+max q(s, a)
+a
+
+(2)
+
+here, p(sj |si , a) is the estimated transition model t , r(s, a)
+is the estimated reward model and 0 ≤ γ ≤ 1 is a discount
+factor.
+to induce effective pedagogical policies, we combined rl
+with various feature selections including 10 types of correlation-
+
+4.
+
+extracting compact dt-rl sets
+
+in order to extract a more compact set of decision-making
+rules from the full set of rl-induced rules, we implemented
+the id3 algorithm to build dts [12]. each rule in the final
+rl-induced policy was used as a training example. two
+types of decision trees were built: unweighted and weighted,
+as well as two types of pruning strategies were implemented:
+pre- and post-pruning. next, we will discuss each of them
+in turn.
+
+the decision to give a we vs. ps may impact students’
+learning differently in different situations. we therefore built
+two types of decision trees: unweighted and weighted. unweighted trees treated each decision equally while weighted
+trees take account of the relative importance of each pedagogical rule. when applying the value iteration algorithm
+to induce the optimal policy, we generate the optimal value
+function q∗ (s, a), which gives the expected discounted reward each agent will gain if it takes an action a in a state s
+and follows the optimal policy to the end. for a given state
+s, a large difference between the values of q(s, “p s”) and
+q(s, “w e”) indicates that it is more important for the its
+to follow the optimal decision in the state s. we therefore
+used the absolute difference between the q values for each
+state s to weight each rl pedagogical rule.
+the id3 algorithm builds a tree recursively from root to
+leaves. on each iteration of the construction process the
+algorithm will check the state of the dataset for the current
+branch. it will then select a test feature for the current
+node based upon the weighted information gain. the current
+node will then be expanded by adding branches to it, each
+of which represents a possible value for the selected feature.
+the data will be partitioned over the branches according to
+the value of the test feature. the selected feature cannot
+be used again by its children. weighted information gain is
+defined by the difference between the weighted entropy of the
+examples before it is selected and after they are separated
+by feature value. the weighted entropy of a node can be
+calculated by equation 3
+h(g) = −
+
+j
+x
+
+p(i|g)log2 p(i|g)
+
+(3)
+
+i=1
+
+j is the total number of output label classes. in our case,
+it is the number of pedagogical actions (we or ps) which
+is 2 . p(i|g) is the
+weighted frequency defined by the equap
+p
+w
+tion: p(i|g) = p x∈i wxy .
+x∈i wx is the total weight of the
+y∈g
+examples
+which
+are
+in
+node
+g and which belong to class i.
+p
+and y∈g wy is the total weights of examples in node g.
+the information gain of spliting the current set of training
+examples using feature f can be calculated by equation 4:
+ig(f, g) = h(g) −
+
+
+
+k
+x
+j=1
+
+p(tj |g)h(tj )
+
+(4)
+
+115
+
+p(tj |g) is the
+weighted frequency of the examples in node g:
+p
+p
+xf =t,x∈g wx
+p
+p(tj |g) =
+.
+xf =t,x∈g wx is the total weights
+y∈g wy
+of
+examples
+in
+nodes
+g
+whose
+value of feature f is j and
+p
+y∈g wy is the total weight of examples in nodes g.
+
+4.2
+
+pre-pruning and post-pruning
+
+to control the size of rules induced by dt, we examined
+two types of pruning strategy: pre- and post-pruning. the
+pre-pruning is conducted during the process of building the
+tree and it used the information gain to determine whether
+to expand or to terminate. only nodes with an information
+gain greater than a threshold times its depth: ig(f, g) ≥
+θ × dg will be expanded and others will be made as a leaf.
+θ is a fixed threshold and dg is the depth of node g.
+post-pruning is conducted after the whole decision tree is
+built and it used the error rate as the pruning measure. the
+error
+rate before a node is expanded is defined as: eg =
+p
+i∈i wi
+. i is the set of the decisions incorrectly classified
+|g|
+by node g and |g| is the total number of examples in the
+node g. the
+p error
+p rate after a node is expanded is defined
+wi
+as: ec = c∈c |g|j∈ic . c is the set of children nodes
+of g after it is expanded and ic is the set of the decisions
+incorrectly classified by the node c. in post-pruning, if the
+difference of a node’s error rate from before to after split is
+less than a threshold, the node will be pruned by removing
+all of its branches to make it a leaf node.
+
+4.3
+
+the compact set of dt-rl rules
+
+in order to induce a compact set of dt-rl rules, we applied the dts to the full set of 3706 rl-induced rules. the
+induced unweighted and weighted dts without pruning has
+2527 and 2456 rules (leaf nodes) respectively. thus, without pruning, dts are already able to extract a smaller set
+of rules: it reduced the total number of rules by over 1000.
+figure 1 shows the relationship between the number of leaf
+nodes (x-axis) and the inverted weighted accuracy (y-axis).
+weighted accuracy(w a) is the weighted percentage of decisions correctlypmade, which can be calculated by the equation: w a =
+
+di ∈t
+
+p
+
+di
+
+wi
+
+wi
+
+. t is the set of correct predictions
+
+made by a dt and wi is the weight of decision i. the inverted weighted accuracy (iw a) is iw a = w a−10 , the
+lower the better. since our goal is to find a good balance
+point between the iwa and the number of leaf nodes, we
+applied a widely used strategy called the elbow method,
+to select the best tree. as we can see in the figure, the
+elbows for the two unweighted tree approaches are around
+800 and 1700 rules (x-axis) for the pre and post pruning
+respectively while the elbows for the two weighted tree approaches are around 250 and 500 for the pre and post pruning respectively. so it seems that weighted tree can extract
+more compact set of rules than the unweighted trees. while
+the weighted pre-pruning approach has around 250 rules,
+its iwa is much higher than the weighted post-pruning approach. therefore, we chose the weighted tree with postpruning strategy which has the an elbow at about 500 leaf
+nodes and reasonable iwa.
+to further justify our dt choice, table 1 shows the relationship between the pruning thresholds, w a and the number
+
+figure 1: leaf nodes - accuracy
+of leaf nodes for the weighted tree with post-pruning. table 1 shows that the tree with the closest number of leaves
+to 500 is the 529 one. it can be obtained by apply a pruning
+threshold of 0.8 and the result tree has a weighted accuracy
+of 0.76. the rules in the resulted tree will be the rules used
+in the dt-rl condition.
+in short, we applied dt on rl-induced pedagogical policies
+to extract a more compact set of decision-making rules. the
+effectiveness of the original full set and the compact set of
+policies were empirically compared against a baseline policy
+which makes random yet reasonable decisions: ps vs. we.
+thus, we have three conditions:
+1. full-rl: the full set of 3706 rl-induced rules.
+2. dt-rl: the compact set of 529 dt-induced rl rules.
+3. random: the random yet reasonable policy.
+
+5.
+
+empirical experiment
+
+participants: this study was conducted in the undergraduate discrete mathematics course at the department
+of computer science at nc state university in the fall of
+2016. 153 students participated in this study, which was
+given as their final homework assignment.
+conditions: students in the study were assigned to three
+conditions via balanced random assignment based upon their
+course section and performance on the class mid-term exam.
+since the primary goal of this work is to examine the effectiveness of the two rl based policies, we assigned more
+students to the full-rl and dt-rl conditions than in the
+random condition. the final group sizes were: n = 61 (fullrl), n = 51 (dt-rl), and n = 41 (random).
+due to preparations for exams and length of the experiment,
+126 students completed the experiment. 5 students were
+excluded from the subsequent analysis due to perfect pretest
+scores, working in group or gaming the system during the
+training. the remaining 121 students were distributed as
+follows: n = 45 for full-rl; n = 41 for rl-dt; n = 35
+for random. we performed a χ2 test of the relationship
+between students’ condition and their rate of completion
+and found no significant difference among the conditions:
+χ2 (2) = 0.955, p = 0.620.
+probability tutor: pyrenees is a web-based its for probability. it covers 10 major principles of probability, such
+as the complement theorem and bayes’ rule. pyrenees
+
+
+
+116
+
+threshold
+wa
+leaves
+
+table 1: weighted dt with post-pruning
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+1.00 0.99 0.98 0.96 0.93 0.89 0.85 0.79
+2456 2217 2029 1809 1608 1383 1043 758
+
+provides step-by-step instruction and immediate feedback.
+pyrenees can also provide on-demand hints prompting the
+student with what they should do next. as with other systems, help in pyrenees is provided via a sequence of increasingly specific hints. the last hint in the sequence, the
+bottom-out hint, tells the student exactly what to do. for
+the purposes of this study we incorporated three distinct
+pedagogical decision modes into pyrenees to match the three
+conditions.
+procedure: in this experiment, students were required to
+complete 4 phases: 1) pre-training, 2) pre-test, 3) training on
+pyrenees, and 4) post-test. during the pre-training phase,
+all students studied the domain principles through a probability textbook, reviewed some examples, and solved certain
+training problems. the students then took a pre-test which
+contained 14 problems. the textbook was not available at
+this phase and students were not given feedback on their answers, nor were they allowed to go back to earlier questions.
+this was also true of the post-test.
+during phase 3, students in all three conditions received
+the same 12 rather complicated problems in the same order
+on pyrenees. each main domain principle was applied at
+least twice. the minimal number of steps needed to solve
+each training problem ranged from 20 to 50. these steps
+included defining variables, applying principles, and solving equations. the number of domain principles required to
+solve each problem ranged from 3 to 11. all of the students
+could access the corresponding pre-training textbook during this phase. each step in the problems could have been
+provided as either a we or ps based upon the condition
+policy. finally, all of the students completed a post-test
+with 20 problems. 14 of the problems were isomorphic to
+the pre-test given in phase 2. the remaining six were nonisomorphic complicated problems.
+grading criteria: the test problems required students to
+derive an answer by writing and solving one or more equations. we used three scoring rubrics: binary, partial credit,
+and one-point-per-principle. under the binary rubric, a solution was worth 1 point if it was completely correct or 0
+if not. under the partial credit rubric, each problem score
+was defined by the proportion of correct principle applications evident in the solution. a student who correctly applied 4 of 5 possible principles would get a score of 0.8. the
+one-point-per-principle rubric in turn gave a point for each
+correct principle application. all of the tests were graded in
+a double-blind manner by a single experienced grader. the
+results presented below are based upon the partial-credit
+rubric but the same results hold for the other two. for
+comparison purposes, all test scores were normalized to the
+range of [0,1].
+
+6.
+
+0.8
+0.76
+529
+
+0.9
+0.68
+231
+
+empirical results
+
+since both the full-rl and dt-rl policies are based on an
+rl-induced policy, we combined the two conditions together
+as the induced group to evaluate the effectiveness the rlinduced policy. the evaluation was conducted by comparing
+the induced group with the baseline random condition on
+learning performance and training time. moreover, in order to further discover to what extent the compact policy
+retained the power of the full policy, we compared the fullrl and dt-rl conditions on the same measures. next, we
+will discuss each of the comparisons in turn.
+
+6.1 induced vs. random
+we measured students’ incoming competence via the pretest scores collected before training took place. table 2
+shows a comparison between the induced group and the
+random group in terms of learning performance. the parenthesized values following the group names in row 1 denote
+the number of students in each group. the second row in this
+table shows the pre-test scores. the last column shows the
+pairwise t-test results. pairwise t-tests on students’ pre-test
+scores show that there is no significant difference between
+the two groups: t(119) = −0.346, p = 0.730, d = 0.069.
+thus, despite attrition, the two groups remained balanced
+in terms of incoming competence. next, we will compare the
+two groups in terms of learning performance in the post-test
+and training time.
+rows 2 - 4 in table 2 show a comparison of the pre-test, isomorphic post-test (14 isomorphic questions), and adjusted
+post-test scores between the two groups along with the mean
+and sd for each. in order to examine the students’ improvement through training on pyrenees, we compared their
+scores on the pre-test and isomorphic post-test questions.
+a repeated measures analysis using test type (pre-test and
+isomorphic post-test) as factors and test score as the dependent measure showed a main effect for test type: f (1, 119) =
+98.75, p < 0.0001. further comparisons on group by group
+basis showed that on the isomorphic questions, both groups
+scored significantly higher in the post-test than in the pretest: f (1, 85) = 81.30, p < 0.0001 for induced and f (1, 34) =
+18.30, p = 0.0001 for random respectively. this suggests
+that the basic practice and problems, domain exposure, and
+interactivity of our its might help students to learn even
+when pedagogical decisions are made randomly.
+in order to investigate the effectiveness of the induced policies, we compared students’ overall learning performance,
+which was evaluated by their adjusted post-test scores, between the two groups. a one-way ancova analysis was
+conducted on their overall post-test scores (20 questions),
+using the pretest scores as a covariate to factor out the influence of their incoming competence. the result shows a
+significant main effect: f (1, 118) = 4.628, p = 0.033. that
+is, the induced group significantly outperformed the random group on adjusted post-test scores, which is shown in
+
+
+
+117
+
+cond
+pre
+iso post
+adjusted post
+time
+we steps
+ps steps
+we pct(%)
+
+table 2: induced vs. random
+induced(86)
+random(35)
+t-test result
+.686(.194)
+.699(.171)
+t(119) = −0.346, p = 0.730, d = 0.069
+.851(.155)
+.812(.195)
+t(119) = 1.141, p = 0.256, d = 0.229
+.751(.144)
+.689(.138)
+t(119) = 2.162, p = 0.033, d = 0.433
+105.87(34.30) 111.18(27.33) t(119) = −0.815, p = 0.417, d = 0.163
+205.74(62.73) 189.46(11.39)
+t(119) = 1.522, p = 0.131, d = 0.305
+173.69(61.14) 190.26(10.28) t(119) = −1.591, p = 0.114, d = 0.319
+54.16(16.35)
+49.89(2.78)
+t(119) = 1.532, p = 0.128, d = 0.307
+
+the fourth row of table 2. therefore, the results showed that
+the induced policies are significantly more effective than the
+random policy.
+the fifth row in table 2 shows the average amount of total
+training time (in minutes) students spent on our its for each
+group. pairwise t-test showed no significant difference in
+training time between the two groups: t(119) = −0.815, p =
+0.417, d = 0.163. the results suggest that when compared
+to the random policy, the induced policies generally do not
+have a significant different impact on students’ training time.
+the last three rows in table 2 show the number of we
+and ps steps given as well as the percentage of we steps
+received by the induced and the random group. pairwise
+t-tests showed that there is no significant difference between
+the two groups on these three measures.
+
+6.2
+
+full-rl vs. dt-rl
+
+we then performed the same comparison between the fullrl and dt-rl conditions in order to examine the effectiveness of the dt-extracted compact policy. the second row
+in table 3 shows the pre-test scores for each condition. a
+pairwise t-test on the scores shows no significant difference
+between the two conditions: t(84) = −0.168, p = 0.867,
+d = 0.036. thus the two conditions were balanced in terms
+of incoming competence.
+the pre-test, isomorphic post-test and adjusted post-test
+scores are shown in rows 2 - 4 of table 3. a repeated measures analysis using test type (pre-test and isomorphic posttest) as factors and test score as dependent measure showed
+a main effect for test type: f (1, 85) = 81.30, p < 0.0001.
+further comparisons on group by group basis showed that
+both conditions scored significantly higher in isomorphic
+post-test than in pre-test: f (1, 44) = 42.16, p < 0.0001
+for full-rl and f (1, 40) = 39.16, p < 0.0001 for dt-rl.
+these results suggest that the students can effectively learn
+from pyrenees with the full and compact policies.
+in order to discover to what degree the compact policy retained the effectiveness of the full policy, we compared the
+post-test scores between the two conditions. the results
+of a pairwise t-test showed no significant different between
+them on isomorphic post-test: t(84) = 0.505, p = 0.615,
+d = 0.109. we also conducted an ancova analysis on the
+overall post-test scores using the pretest scores as a covariate and still found no significant different between the two
+conditions: f (1, 83) = 0.348, p = 0.557. in short, while on
+post-test scores, the dt-rl condition scored slightly lower
+than the full-rl condition, the difference is not significant.
+
+the fifth row of table 3 shows the average amount of time
+students spent on training. as the row shows, the fullrl condition spent significantly more time than the dt-rl
+condition: t(84) = 3.829, p = 0.0002, d = 0.827. thus
+the full-rl and dt-rl policies have significant different
+impact upon the students’ training time.
+the last three rows of table 3 show the number of we
+and ps steps given and the percentage of we steps received by the full-rl and the dt-rl condition. pairwise t-tests showed that comparing to the dt-rl condition, the full-rl condition received significantly fewer we
+steps: t(84) = −4.952, p < 0.0001, d = 1.069; received a
+lower percentage of we steps: t(84) = −4.955, p < 0.0001,
+d = 1.070; and completed more ps steps: t(84) = 4.999,
+p < 0.0001, d = 1.079. these results suggest that the pedagogical decisions made by the compact and full policies are
+substantively different.
+
+7.
+
+discussion
+
+in this study, we applied dt to extract a compact set of
+pedagogical rules from the full set of rl-induced rules and
+empirically evaluated the effectiveness of two sets of rules in
+a classroom study. our goal was to shed some light on the
+rl-induced policies and we think this is only the first step
+towards narrowing the gap and building a bridge between
+machine-induced pedagogical policies and learning theories.
+in order to find the best dt, we explored two types of tree:
+unweighted and weighted; and for each of them, we conducted two types of pruning strategy: pre- and post-pruning.
+after comparing the performance among them, we selected
+the weighted tree with the post-pruning strategy to perform
+the extraction of general decision-making rules. the rlinduced policy contains 3706 specific rules, and the compact
+dt-rl consisted of 529 rules with a weighted decision accuracy of 76%.
+in our empirical experiment, we were able to strictly control
+the domain content and thus to isolate the impact of pedagogy from content. based on this isolation, we compared
+students’ performance with the full-rl policy, the dt-rl
+policy and the baseline random policy. our results showed
+that students in all three conditions learned significantly after training on pyrenees, this suggests that the basic training
+of the its is effective, even when the pedagogical decisions
+are made randomly. to evaluate the effectiveness of the two
+machine induced policies (full-rl policy and dt-rl policy), we combined the full-rl and dt-rl condition as the
+induced group and compared its learning performance with
+the random group. our results showed that the induced
+
+
+
+118
+
+cond
+pre
+iso post
+adjusted post
+time
+we steps
+ps steps
+we pct(%)
+
+table 3: full-rl vs. dt-rl
+full-rl(45)
+dt-rl (41)
+t-test result
+.683(.205)
+.690(.184)
+t(84) = −0.168, p = 0.867, d = 0.036
+.859(.145)
+.842(.168)
+t(84) = 0.505, p = 0.615, d = 0.109
+.757(.144)
+.739(.145)
+t(84) = 0.594, p = 0.554, d = 0.128
+118.42(35.000) 92.10(27.95)
+t(84) = 3.829, p = 0.0002, d = 0.827
+177.44(48.86) 236.80(62.03) t(84) = −4.952, p < 0.0001, d = 1.069
+201.47(47.22) 143.20(60.57)
+t(84) = 4.999, p < 0.0001, d = 1.079
+46.77(12.78)
+62.26(16.13) t(84) = −4.955, p < 0.0001, d = 1.070
+
+group significantly outperform the random group. these
+results suggest that the machine induced policies are indeed
+more effective than the random policy.
+finally, in order to examine to what extent the compact dtrl policy retained the power of the full rl-induced policy,
+we compared the learning performance of the full-rl and
+the dt-rl conditions. our results suggest that while some
+of the power was lost in the general rules extraction, the relative performance difference between the full-rl and the
+dt-rl condition is not significant. in addition, our results
+on the pedagogical decisions made in training revealed that
+the compact dt-rl policy selected significant more we
+than the full-rl policy. this suggests that the two sets
+of policies indeed made materially different decisions. however, since the weighted dt took account of the importance
+of each rule, the dt-rl policy aims to retain maximal decision effectiveness from the full-rl policy while the size of
+the former is less than 15% of the size of the full-rl rules.
+in the future, we will apply existing learning theories to the
+decision-making process generated by decision tree to find
+a theoretical basis for the dt-induced general pedagogical
+decision-making rules.
+
+8.
+
+acknowledgements
+
+this research was supported by the nsf grant #1432156:
+“educational data mining for individualized instruction in
+stem learning environments” and #1651909: “improving
+adaptive decision making in interactive learning environments”.
+
+9.
+
+references
+
+[1] j. r. anderson, a. t. corbett, k. r. koedinger, and
+r. pelletier. cognitive tutors: lessons learned. the
+journal of the learning sciences, 4(2):167–207, 1995.
+[2] j. beck, b. p. woolf, and c. r. beal. advisor: a
+machine learning architecture for intelligent tutor
+construction. aaai/iaai, 2000:552–557, 2000.
+[3] c. boutilier, r. dearden, and m. goldszmidt.
+stochastic dynamic programming with factored
+representations. artificial intelligence, 121(1):49–107,
+2000.
+[4] m. chi, k. vanlehn, d. litman, and p. jordan.
+empirically evaluating the application of
+reinforcement learning to the induction of effective
+and adaptive pedagogical strategies. user modeling
+and user-adapted interaction, 21(1-2):137–180, 2011.
+[5] l. j. cronbach and r. e. snow. aptitudes and
+instructional methods: a handbook for research on
+interactions. irvington, 1977.
+
+[6] a. d. davidson and et al. multiple ecological pathways
+to extinction in mammals. proceedings of the national
+academy of sciences, 106(26):10702–10705, 2009.
+[7] u. d. gupta, e. talvitie, and m. bowling. policy tree:
+adaptive representation for policy gradient. in aaai,
+pages 2547–2553, 2015.
+[8] a. iglesias, p. martı́nez, r. aler, and f. fernández.
+learning teaching strategies in an adaptive and
+intelligent educational system through reinforcement
+learning. applied intelligence, 31(1):89–106, 2009.
+[9] a. iglesias, p. martı́nez, r. aler, and f. fernández.
+reinforcement learning of pedagogical policies in
+adaptive and intelligent educational systems.
+knowledge-based systems, 22(4):266–270, 2009.
+[10] k. r. koedinger and et al. intelligent tutoring goes to
+school in the big city. ijaied, 8(1):30–43, 1997.
+[11] p. phobun and j. vicheanpanya. adaptive intelligent
+tutoring systems for e-learning systems.
+procedia-social and behavioral sciences,
+2(2):4064–4069, 2010.
+[12] j. r. quinlan. induction of decision trees. machine
+learning, 1(1):81–106, 1986.
+[13] s. h. reichard and c. w. hamilton. predicting
+invasions of woody plants introduced into north
+america. conservation biology, 11(1):193–203, 1997.
+[14] s. shen and m. chi. aim low: correlation-based
+feature selection for model-based reinforcement
+learning. edm, 2016.
+[15] s. shen and m. chi. reinforcement learning: the
+sooner the better, or the later the better? in umap,
+pages 37–44. acm, 2016.
+[16] r. s. sutton and a. g. barto. reinforcement learning:
+an introduction, volume 1. mit press cambridge,
+1998.
+[17] k. vanlehn. the behavior of tutoring systems.
+ijaied, 16(3):227–265, 2006.
+[18] m. p. vayssières, r. e. plant, and b. h. allen-diaz.
+classification trees: an alternative non-parametric
+approach for predicting species distributions. journal
+of vegetation science, 11(5):679–694, 2000.
+

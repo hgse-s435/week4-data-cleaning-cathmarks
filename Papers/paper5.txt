@@ -1,0 +1,3503 @@
+
+
+55
+
+toward the automatic labeling of course questions for
+ensuring their alignment with learning outcomes
+s. supraja
+
+kevin hartman
+
+sivanagaraja tatinati
+
+andy w. h. khong
+
+nanyang technological
+university
+50 nanyang ave
+singapore 639798
+ssupraja001@e.ntu.edu.sg
+
+nanyang technological
+university
+50 nanyang ave
+singapore 639798
+khartman@ntu.edu.sg
+
+nanyang technological
+university
+50 nanyang ave
+singapore 639798
+tatinati@ntu.edu.sg
+
+nanyang technological
+university
+50 nanyang ave
+singapore 639798
+andykhong@ntu.edu.sg
+
+abstract
+expertise in a domain of knowledge is characterized by a greater
+fluency for solving problems within that domain and a greater
+facility for transferring the structure of that knowledge to other
+domains. deliberate practice and the feedback that takes place
+during practice activities serve as gateways for developing domain
+expertise. however, there is a difficulty in consistently aligning
+feedback about a learner’s practice performance with the intended
+learning outcomes of those activities – especially in situations
+where the person providing feedback is unfamiliar with the
+intention of those activities. to address this problem, we propose
+an intelligent model to automatically label opportunities for
+practice (assessment questions) according to the learning outcomes
+intended by the course designers. as a proof of concept, we used a
+reduced version of bloom’s taxonomy to define the intended
+learning outcomes. using a factorial design, we employed term
+frequency-inverse document frequency (tf-idf) and latent
+dirichlet allocation (lda) to transform questions from text to word
+weightages with support vector machine (svm) and extreme
+learning machine (elm) to train and automatically label the
+questions. we trained our models with 120 questions labeled by the
+subject matter expert of an undergraduate engineering course.
+compared to existing works which create models based on a selfgenerated dataset, our proposed approach uses 30 untrained
+questions from online/textbook sources to validate the performance
+of our models. exhaustive comparison analysis of the testing set
+showed that tf-idf with elm outperformed the other
+combinations by yielding 0.86 reliability (f1 measure) with the
+subject matter expert.
+
+keywords
+learning outcomes, term frequency-inverse document frequency,
+latent dirichlet allocation, extreme learning machine, support
+vector machine
+
+1. introduction
+increasingly, modern curriculum design in tertiary and adult
+learning settings has become a collaborative endeavor between
+subject matter experts, learning designers, and learning
+technologists. while these teams employ a variety of process
+
+models for the planning, execution, and revision of their curriculum
+and activity designs, often greater attention is paid to the
+construction of a course design and the course content rather than
+the assessment practices that measure learning and their ongoing
+maintenance.
+the algorithms and use case described in this paper exist in a
+particular context of outcome-based education. in this context,
+learning is defined by observable changes in a learner’s behavior.
+these changes commensurate with krathwohl’s model of learning
+objectives [1] but learning outcomes go beyond objectives.
+learning outcomes are predicated on having learners observably
+demonstrate their growing understanding of a topic or proficiency
+within a field [2]. when learning activities become more openended and exploratory, and when learners are offered choices for
+how to proceed, learners often look to how they will ultimately be
+assessed to gauge which learning strategies they should employ [3].
+when a course’s learning activities support its assessment practices
+and the assessment practices support the types of outcomes that are
+relevant to learners in the future, the course’s activities and
+intended learning outcomes exhibit constructive alignment with
+each other [2]. adhering to constructive alignment creates a
+seamless path from learning, to applying, to transferring concepts
+and relationships when solving novel problems.
+however, the promise of constructive alignment is not easily
+delivered upon. oftentimes, a course’s learning outcomes cannot
+be measured by its assessment practices, or its assessment practices
+are decontextualized from the types of activities and practices
+learners are actually preparing for [4]. whether in the context of
+higher learning or professional development, when thinking about
+developing flexible, life-long learners it is paramount to have
+mechanisms in place to support learners as they work to gain
+domain expertise. these processes should reliably measure
+learning and link assessment practices to authentic activities.
+
+1.1 learning design for domain expertise
+prior work in designing for adaptive domain expertise, the kind of
+expertise necessary for learners to function in changing
+environments and flexible job scopes, has shown that learning
+design teams need to be cognizant of three elements which will be
+discussed in turn.
+
+1.1.1 levels of learning outcomes
+learning outcomes range in sophistication and vary by field. in
+medicine, miller’s pyramid [5] lists learning outcomes beginning
+with knowing about a subject, progressing to knowing how to do
+something, to being able to actually demonstrate it in a contrived
+setting like a role-play with actors, and to being able to demonstrate
+it in a real environment like a surgical theater [6]. the idea is based
+on the belief that the development of expertise is a progression from
+
+
+
+56
+
+the recall of facts to the execution of skills. however, as research
+on problem based learning has shown, demonstration of skill and
+the recall of facts can proceed independently of each other
+depending on the learning environment [7].
+in [8], a field agnostic method of classifying learning outcomes
+based on their quality is presented. essentially, the structure of
+observed learning outcomes (solo) taxonomy identifies the
+level of cognitive sophistication a learning outcome requires.
+lower level learning outcomes indicate a learner is capable of
+remembering facts in isolation. more sophisticated levels require
+learners to assimilate information from various sources to make
+connections and transform that understanding into something new.
+perhaps the most popular listing of learning outcomes is bloom’s
+taxonomy. similar to miller’s pyramid, bloom’s revised
+taxonomy also begins with the retrieval of facts and information
+as its foundation and builds up to application of knowledge and
+further to analyzing, evaluating, and creating. because of its
+simplicity and familiarity with learning designers and subject
+matter experts alike, bloom’s taxonomy can easily be used to
+identify the levels of learning outcomes in a course [9].
+
+1.1.2 opportunities for deliberate practice
+along with identifying a learning activity’s intended outcomes,
+expertise development requires opportunities for deliberate
+practice. in contrast to repetitive practice intended for learners to
+develop automaticity in either the recall of information or the
+application of a skill, often during time-limited tasks, deliberate
+practice focuses on mastering the nuances of the domain itself to
+fine-tune performance [10]. in fact, a learner’s level of grit, a
+combination of perseverance and passion, predicts how close to
+expert performance a learner will eventually show [11].
+the key difference in processes between repetitive practice and
+deliberate practice leads to different forms of expertise: adaptive
+and routine [12]. routine forms of expertise allow a learner to
+conduct a task at an optimal level. adaptive expertise allows
+learners to learn new tasks or solve novel problems at an
+accelerated rate. in an industrial setting, routine expertise helps a
+worker complete a particular job function. adaptive expertise
+enables that same worker to retrain to fill new job functions.
+typically, the amount of time necessary to achieve expert
+performance in a domain is in the order of years to decades [13].
+however, incremental improvement can be seen in a few practice
+cycles when activities align to the intended learning outcomes.
+
+1.1.3 formative assessments and actionable
+feedback
+hand in hand with creating opportunities for deliberate practice is
+providing formative feedback to the learner about how to improve
+that practice while that improvement is still relevant. imagine
+students who diligently answer every question in an engineering
+textbook but never receive feedback on the quality of their
+solutions. in this case, the learners would be unable to gauge their
+performance in relation to the course learning outcomes or have an
+idea about how to improve their performance in the future. now
+imagine if those same students do receive feedback, but that
+feedback arrives after the course’s final examination. if the content
+of the course is mostly self-contained and will not be revisited, the
+feedback is mostly irrelevant.
+formative feedback consists of two parts: 1) an interpretable
+indication of a learner’s performance on an assessment of learning
+with respect to a standard of performance (learning outcome) and
+
+2) the opportunity to improve performance before the final
+evaluation [14].
+cognitive tutors provide a clear example of the power of coupling
+formative assessment and actionable feedback together in the
+domain of mathematics learning [15]. by presenting learners with
+a series of structured problems, cognitive tutors are capable of
+intervening at any point during the problem-solving process to
+provide students with feedback about their performance. this
+feedback may be the identification of an error, the presentation of
+a hint, or the request for more information about the learner’s
+reasoning. after the feedback, learners have the opportunity to
+adjust their problem-solving heuristics to improve their
+performance going forward.
+such an interaction sequence works with highly structured tasks
+with application-oriented learning outcomes. however, the
+feedback cycle is more difficult to manage when the learning
+outcomes are aligned to higher-order reasoning like evaluation,
+analyzing and creating. these outcomes have multiple paths for
+reaching a satisfactory answer.
+with this difficulty in mind, we looked at techniques to automate
+the process of identifying the reasoning level of text-based
+assessment items (questions) with the intention of better aligning
+questions to learning outcomes as a first step toward being able to
+provide opportunities for deliberate practice. subsequently, the
+outcome of our proposed work is to link actionable feedback to a
+learner’s performance on assessment items.
+
+1.2 automated question classification
+techniques
+prior work has shown the viability of automatically labeling
+questions in accordance with a course’s learning outcomes.
+however, our work goes beyond labeling existing content to
+helping course instructors promote deliberate practice and expertise
+development by providing a method of finding new questions that
+align to the course designer’s original intended learning outcomes.
+we highlight the drawbacks of prior work and how our proposed
+approach addresses those limitations.
+
+1.2.1 labeling questions based on difficulty level
+early attempts at automatically labeling questions relied on subject
+matter experts to pre-define the difficulty levels of questions.
+artificial neural network trained by backpropagation then used the
+question features and assigned difficulty levels in the training set to
+classify new questions. a five-dimensional feature vector that
+consisted of query-text relevance, mean term frequency, length of
+questions and answers, term frequency distribution (variance),
+distribution of questions and answers in a text were used. the
+method yielded an f1 measure, a classification reliability metric
+that measures a test’s accuracy, of 0.78 [16]. however, a major
+pitfall this method is its lack of semantic analysis.
+entropy-based decision tree has also been used to label questions
+[17]. the weakness in this strategy is that there is high possibility
+of overfitting the model during the training phase that then
+negatively affects the subsequent prediction performance.
+
+1.2.2 labeling questions based on bloom’s
+taxonomy using natural language processing
+natural language processing (nlp) has been used for the
+generation of assessments, answering questions, supporting users
+in learning management systems and preparing course materials.
+the wordnet package has been used to detect semantic similarity.
+by performing a rule-based approach, the accuracy of labeling a
+
+
+
+57
+
+question based on bloom’s taxonomy reaches 82% [18]. to
+improve the rule-based approach, a hybrid technique of using an ngram classifier with a rule-based approach has also been explored.
+rules were based on combining parts-of-speech tagging, and the
+n-gram classifier found the probabilities of predicting certain
+words. such a hybrid method yielded an f1 measure of 0.86 [19].
+
+understanding) were collapsed into remember. applying
+remained its own category. all of the higher-order reasoning
+categories (analyzing, evaluating, and creating) were collapsed
+into transfer. figure 1 shows how our labeling scheme categories
+map onto the original categories from bloom’s revised taxonomy.
+
+1.2.3 labeling questions based on bloom’s
+taxonomy using machine learning techniques
+machine learning algorithms can be broadly split into either
+supervised or unsupervised training implementations. generally,
+supervised training is adopted when, during training, labels have
+been pre-determined and questions are labeled by an expert. the
+most commonly used method in such cases is the term frequencyinverse document frequency (tf-idf). the algorithm assigns
+weightages to individual words in a question statement to define a
+custom vector space to each question.
+machine learning techniques such k-nearest neighbors, naïve
+bayes and support vector machine (svm) have been implemented
+for labeling questions. when doing a performance comparison
+among these three techniques, an f1 measure of 0.71 was achieved
+using svm [20]. to increase the accuracy level, additional features
+were incorporated in future versions of the work. three different
+feature selection processes, namely: odd ratio, chi-square statistic
+and mutual information were used with the three machine learning
+techniques. the f1 measure result reached 0.9 [21].
+furthermore, an integrated approach of feature extraction has been
+proposed by using headword, semantic, keyword and syntactic
+extractions, which are fed into svm [22]. however, this work has
+not yet been completed by using a testing dataset to quantify the
+reliability of prediction.
+a major downside in existing works is that both the training as well
+as testing questions are part of the same course curriculum; the
+questions are generated by the same author/instructor. even when
+a high f1 measure is achieved, it does not enable the algorithm to
+label questions written by another subject matter expert. our work
+increases the flexibility of labeling methods by testing our models
+with a new set of questions compiled from textbook and online
+resources.
+in addition, our work introduces extreme learning machine (elm),
+which has been shown to outperform svm during similar labeling
+tasks [23]. moreover, we introduce lda as an alternative technique
+to tf-idf for transforming question statements into numerical
+word weightages.
+by comparing combinations of these new techniques with more
+traditional techniques, we aim to gauge which combination attains
+the highest labeling reliability with the subject matter expert when
+automatically labeling untrained questions. for our purposes, using
+the combination with the highest f1 measure (fewest false
+negatives and false positives) becomes paramount. in our use case,
+a mislabeling by the algorithm will lead to the wrong set of practice
+questions to be given to students and diminish the impact of
+deliberate practice on reaching the intended learning outcomes.
+
+2. methods
+2.1 materials
+2.1.1 labeling scheme
+the core of this study centers on a labeling scheme for identifying
+the sophistication of learning outcomes based on a simplified
+version of bloom’s taxonomy. in this labeling scheme, the first
+two levels of bloom’s taxonomy (remembering and
+
+figure 1: mapping of bloom's revised taxonomy [24]
+we collapsed the taxonomy into three categories for two reasons.
+first, the subject matter expert tasked with labeling the questions
+was unsure about how reliably the questions could be labeled by
+someone without a background in learning design, educational
+psychology, or curriculum development. collapsing the categories
+to remember, apply, and transfer made manually labeling
+hundreds of questions to train the machine learning algorithms
+more tractable. second, collapsing the categories had the effect of
+making bloom’s taxonomy more analogous to the successful use
+cases of miller’s pyramid by subject matter experts in both higher
+education and professional development settings [5].
+
+2.1.2 question dataset
+the dataset consists of a total of 150 questions used for training and
+testing the machine learning algorithms based on the content of an
+undergraduate electrical and electronic engineering course.
+for this study, we formed a training set of 120 questions by
+randomly selecting 40 remember, apply, and transfer items from
+the larger question pool of more than 200 questions used in that
+course. the pool came from a repository of four years’ worth of
+assignment, homework, quiz and exam questions presented to
+students. these questions prompt students for a range of answer
+types (i.e., open-ended, multiple-choice, short-structured, essay).
+we then created a testing set of 30 new questions compiled from
+external sources such as textbooks and online question banks. this
+set was also balanced with equal representation of remember,
+apply, and transfer questions.
+
+2.2 data pre-processing procedures
+we pre-processed the raw questions in two phases. first, the subject
+matter expert labeled every question according to the labeling
+scheme described above. second, we transformed the text of every
+question into a machine-readable format before passing them
+through the machine learning algorithms.
+
+2.2.1 subject matter expert pre-processing
+the subject matter expert manually labeled each question in the
+training set based on its intended learning outcome (remember,
+apply or transfer). the subject matter expert then labeled the 30
+new questions in the testing set in the same manner. these new
+questions are labeled for the purpose of knowing the ground truth
+for performance evaluation. table 1 below shows some examples
+of the labeled questions.
+
+
+
+58
+
+table 1 - examples of labeled questions
+remember
+consider a signal described by y[n] = 2n +4. what would be the
+amplitude of the signal at sample index n=3?
+apply
+consider the following input and output signals: find the transfer
+function and state the poles and zeros of this transfer function.
+transfer
+describe how the bandpass filter can be utilized for radar
+applications.
+
+2.2.2 text pre-processing
+the text transformation began by excising all equations,
+mathematical symbols and diagrams from the questions. we only
+kept the core of the question prompts by removing the descriptive
+and explanatory text from scenario and hypothetical questions. for
+example, if a question began by setting the stage with “peter has
+been asked to perform…”, followed by the question prompt “how
+much voltage should peter expect in the circuit?”, all of the
+descriptive text prior to the question prompt was removed to
+improve the consistency of word length and usage between items.
+for the remaining words in the questions, we changed all of the
+characters to lower case, removed all punctuation marks, numbers,
+and non-unicode characters. we then stemmed the remaining
+words to obtain a list of root words. from this list of root words, we
+removed all words with fewer than three letters. because we were
+unsure of the relationship between the words and the labels, we did
+not create a list of stopwords for removal.
+
+3. techniques
+we tested four combinations (in no particular order) of word
+weighting and question labeling algorithms, as shown in figure 2,
+to identify the techniques with the highest reliability for our
+automated learning outcome labeler.
+
+we implemented a modified version of tf-idf that used individual
+questions as the source of the analysis instead of complete
+documents. this focused the model on finding the relevance of each
+word within each single question. by converting each question into
+a vector of weightages based on word frequencies, the machine
+learning algorithms were then used to label the questions. the
+modified tf-idf model can be described by
+𝑇𝐹 − 𝐼𝐷𝐹(𝑤𝑖 , 𝑞𝑘 ) = #(𝑤𝑖 , 𝑞𝑘 ) × log
+
+𝑇𝑅
+#𝑇𝑅(𝑤𝑖 )
+
+(1)
+
+where wi refers to a particular word i, qk refers to a particular
+question k, #(wi,qk) refers to number of times wi occurs in qk, tr
+refers to total number of questions and #tr(wi) refers to question
+frequency, or the number of questions in which wi occurs [20].
+in the case where the term frequency (tf) count is biased towards
+longer questions, the tf count is normalized as
+𝑇𝐹𝑖,𝑘 =
+
+𝑛𝑖,𝑘
+
+(2)
+
+∑𝑗 𝑛𝑗,𝑘
+
+where ni,k refers to the number of times wi occurs in qk, the
+denominator term (size of each question) refers to the sum of the
+number of times each word appears in qk [25].
+for our work, the pre-processing procedures registered a total of
+465 unique stemmed words in our compilation of 120 training
+questions and 30 testing questions. this led to each question being
+represented as a vector of 1 row and 465 columns arranged in
+alphabetical order by stemmed word. when a word is present in a
+question, the normalized weight of that word is assigned to that
+question’s vector element. if a word is not present in the question,
+the weight is zero.
+after determining the unique word weightage vectors for all 150
+questions, the entire matrix is sorted such that for each question, the
+weightages are arranged in ascending order. the top ten weightages
+are chosen for each question. the 10 weightages may correspond
+to different words in each question, but their combinations remain
+question-specific and give a numerical representation of each
+question statement. this new vector of 10 columns per question
+serves as the input to the machine learning algorithms.
+as an example, we will use the pre-processed question prompt:
+for signal which begin when the one side unilateral ztransform given
+
+table 2 below shows the weightages assigned to the above example
+after the application of the tf-idf technique. the weightages are
+then arranged in ascending order and the top 10 values are taken.
+table 2 - tf-idf weightage arrangement
+figure 2: four combinations of algorithms
+every word in each question prompt was assigned a weightage
+value based on either term frequency-inverse document frequency
+(tf-idf) or latent dirichlet allocation (lda). subsequently, the
+vector values for each question were passed through either support
+vector machine (svm) or extreme learning machine (elm) to
+assign a label. all algorithms were implemented in r studio.
+
+3.1 term frequency-inverse document
+frequency
+term frequency-inverse document frequency (tf-idf) is a
+technique for finding the relative frequency of words in a given
+document, and comparing those frequencies with the inverse of
+how often each of those words appear in the complete document
+corpus. the resulting ratio can be used to signify the relevance of
+each unique word within a single document.
+
+word (alphabetical order)
+
+weightage
+
+begin
+
+0.392
+
+for
+
+0.140
+
+given
+
+0.140
+
+one
+
+0.222
+
+side
+
+0.356
+
+signal
+
+0.116
+
+the
+
+0.007
+
+unilateral
+
+0.392
+
+when
+
+0.279
+
+which
+
+0.230
+
+ztransform
+
+0.216
+
+
+
+59
+
+3.2 latent dirichlet allocation
+latent dirichlet allocation (lda) is a probabilistic technique for
+topic modeling based on the bayesian model. the essential idea of
+lda is that each document consists of a mixture of topics, with the
+continuous-valued mixture properties distributed in a dirichlet
+random variable, a continuous multivariate probability distribution.
+again, in the context of our work, we applied lda to questions in
+the dataset by substituting the original notion of documents in the
+lda algorithm with questions in our modified model. therefore,
+the modified model attempted to find k number of topics (k is a
+user-defined parameter to determine the desired number of topics,
+or dimensionality of the dirichlet distribution) for a given set of
+question statements based on the choice and usage of words in each
+question. the joint distribution of a topic mixture, a set of topics
+and a set of words can be represented by
+𝑝(𝜃, 𝑡, 𝑤|𝛼, 𝛽) = 𝑝(𝜃|𝛼) ∏𝑀
+𝑖=1 𝑝(𝑡𝑖 |𝜃)𝑝(𝑤𝑖 |𝑡𝑖 , 𝛽)
+
+(3)
+
+where parameter α is a k-vector with components more than zero,
+parameter β refers to the matrix of word probabilities, θ refers to a
+k-dimensional dirichlet random variable, ti refers to a topic, wi
+refers to a word [26].
+figure 3 shows a graphical model representation of lda. the
+bigger circle refers to questions while the smaller circle refers to
+the repeated choice of topics and words within each question.
+
+out of the entire set of stemmed words detected, ten words have
+been identified as topic names. hence, lda automatically
+associates the remaining words the above-mentioned ten topics.
+based on the words that appear in each question, lda displays the
+number of topics per question. based on the topic assignments, the
+topic weightages for each question is generated. for topics not
+present in a question, a minimal weightage is given to those topics
+in lieu of a zero value. the value ensures that the topic weightages
+for a question sum to one. similar to the tf-idf output, the new
+vector of 10 columns per question becomes the input for the
+machine learning algorithms.
+
+3.3 extreme learning machine
+extreme learning machine (elm) is a learning algorithm for
+single-hidden layer feedforward neural networks (slfns). elm
+can be used for classification, regression, clustering, compression
+and feature learning. elm randomly chooses the hidden nodes and
+determines the output weights of the neural networks.
+the following three-step learning model explains elm. given a
+training set that is labeled (information about the target nodes),
+hidden node activation function and number of hidden nodes,
+step 1: randomly assign hidden node parameters
+step 2: calculate the hidden layer output matrix, h
+step 3: calculate the output weight 𝛾
+given a set of inputs with unknown labels, the objective is to find
+the target outputs [27]. once the inter-layer weights have been
+found, the same weights are used during the testing phase. for a
+given set of input samples xk, the target/output is given by tk. for
+number of hidden nodes l and with a certain activation function
+f(x), the slfn is modeled as
+∑𝐿𝑗=1 𝛾𝑗 𝑓𝑗 (𝑥𝑘 ) = ∑𝐿𝑗=1 𝛾𝑗 𝑓(𝑤𝑗 ∙ 𝑥𝑘 + 𝑏𝑗 ) = 𝑜𝑘 , 𝑘 = 1, … , 𝐿 (4)
+
+figure 3: graphical model representation of lda
+since lda involves topic modeling, an appropriate k value chosen
+for our work was ten. this allowed a standard comparison between
+lda and the top ten weightages from the tf-idf method. the
+generated unique topics (based on the stemmed words) are shown
+in table 3.
+table 3 - topic names generated by lda
+topic number
+
+stemmed topic name
+
+1
+
+differ
+
+2
+
+discrete
+
+3
+
+impulse
+
+4
+
+signal
+
+5
+
+filter
+
+6
+
+apply
+
+7
+
+dft
+
+8
+
+output
+
+9
+
+sample
+
+10
+
+system
+
+where wj refers to the weight vector that stores the weights between
+input and hidden nodes, 𝛾j refers to the weight vector that stores the
+weights between the hidden and output nodes, bj refers to the
+threshold of the jth hidden nodes. the objective is that ok and tk
+(original target) should have zero difference [23] using possible
+activation functions that include sigmoid, sine, radial basis and
+hard-limit.
+in our case, the output of the elm are three continuous values that
+represent the values assigned to the three learning outcome
+categories (remember, apply and transfer). to convert the three
+values into a binary value for comparing the predicted labels with
+the actual labels, we set the learning outcome category with the
+highest value to one and the remaining two to zero.
+
+3.4 support vector machine
+support vector machine (svm) is a mapping of data samples such
+that these samples can be distinctly labeled. the concept of svm
+is derived from margins and subsequently separating data into
+groups with large gaps between them. deriving an optimal
+hyperplane for identifying linearly separable patterns is the key to
+svm. this idea is extended to cases where the patterns are nonlinearly separable, by using a kernel function to transform the
+original data samples to map onto a new space [28]. possible
+kernels are: linear, polynomial, radial basis and sigmoid.
+for our work, we used the c-support vector classification type.
+given a set of inputs and targets, the cost function is given by [29]
+1
+
+min 𝑝𝑇 𝑝 + 𝐶 ∑𝑘𝑗=1 𝜉𝑗
+
+𝑝,𝑚,𝜉 2
+
+(5)
+
+subject to 𝑦𝑗 (𝑝𝑇 𝜙(𝑣𝑗 ) + 𝑚) ≥ 1 − 𝜉𝑗 , 𝜉𝑗 ≥ 0, 𝑗 = 1, … , 𝑘
+
+
+
+60
+
+where c>0 is the regularization parameter, m is a constant, p is the
+vector of coefficients, 𝜉𝑗 refers to parameters that handle the inputs,
+index j refers to labeling the k training cases, v refers to the
+independent variables, y refers to the class labels, 𝜙 refers to the
+kernel used that transforms data from the input to the chosen feature
+space.
+fundamentally, support vectors are data points that lie close to the
+decision boundary, which are the hardest to classify. svm
+maximizes the margin around the hyperplane that separates these
+points. the cost function is determined based on the training
+samples (support vectors). these support vectors are the basic
+elements of a training set that would change the position of the
+hyperplane dividing the dataset. svm becomes an optimization
+problem for determining the optimal hyperplane.
+
+3.5 performance metrics
+to evaluate the reliability of our four technique combinations with
+the subject matter expert’s labels, we looked at using the f1
+measure. accuracy is the number of correct labels divided by the
+size of testing data. the f1 measure is a harmonic mean of two
+other metrics: precision and recall. precision refers to the
+correctness of questions that have been selected as a particular
+category. recall refers to the correctness of selection of the correct
+category given all the questions that were correctly classified.
+because minimizing the number of false positives and false
+negatives was important for accurately assigning new questions to
+the correct practice sets, we used the f1 measure as the basis for
+our algorithm comparisons. to explain the f1 measure, we will step
+through the confusion matrix used to describe the performance of a
+labeling model on a set of testing data. there are four concepts used
+to construct the confusion matrix:
+true positive (tp) refers to the number of questions that the
+algorithm correctly identifies as presenting a label.
+false positive (fp) refers to the number of questions that the
+algorithm identifies as presenting a label while the subject matter
+expert indicates the label was absent.
+true negative (tn) refers to the number of questions that the
+algorithm correctly identifies as having a label absent.
+false negative (fn) refers to the number of questions that the
+algorithm identifies as having a label absent while the subject
+matter expert indicates the label was present.
+the f1 measure is calculated as follows [30]
+𝑃𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛 =
+𝑅𝑒𝑐𝑎𝑙𝑙 =
+𝐹1 𝑚𝑒𝑎𝑠𝑢𝑟𝑒 =
+
+𝑇𝑃
+(𝑇𝑃+𝐹𝑃)
+𝑇𝑃
+
+(𝑇𝑃+𝐹𝑁)
+
+2 × 𝑝𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛 × 𝑟𝑒𝑐𝑎𝑙𝑙
+𝑝𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛+𝑟𝑒𝑐𝑎𝑙𝑙
+
+(6)
+(7)
+(8)
+
+4. results and analysis
+4.1 insights by subject matter expert
+when looking at every question presented to students over the
+course of a semester, the subject matter expert identified the
+number of questions corresponding to remember, apply and
+transfer as shown in table 4. just by labeling the course questions,
+the subject matter expert realized how misaligned the course’s
+learning outcomes were with its assessment practices. a large
+emphasis on apply questions was expected, but the dearth of
+transfer questions was surprising. of those 23 transfer items, most
+were presented during the final exam.
+
+table 4 - frequency of questions aligned to learning outcomes
+learning outcome
+
+frequency (number of questions)
+
+remember
+
+62
+
+apply
+
+131
+
+transfer
+
+23
+
+one of the stated learning outcomes of the course was to prepare
+students to flexibly transfer course content to novel problems and
+new situations. however, waiting until the final exam to present
+students with such opportunities denied them actionable feedback
+during the semester. in response to the pre-processing labeling
+efforts, the subject matter expert then added 42 new transfer
+questions throughout the course for the next semester.
+
+4.2 model reliability with subject matter
+expert
+the objective of this implementation is to evaluate whether the
+trained model is able to predict the type of question (remember,
+apply or transfer). based on the trained model using questions
+from the undergraduate course, the testing questions from
+textbooks and online sources were passed through our model to
+determine the level of reliability of labeling new questions that
+were not generated by the subject matter expert. in our intended use
+case, the testing dataset would not need to be manually labeled.
+however, to determine the level of reliability of our labeling
+algorithms, the subject matter expert’s manual labels served as a
+ground truth for the f1 measure calculations.
+
+4.2.1 parameter selection
+we first determined the best set of parameters based on 10-fold
+cross validation of the training dataset. as there were 120
+questions, 90% of the questions (108 questions) were used for
+training and 10% of the questions (12 questions) were used as a
+validation set. this process was done 10 times using 10 different
+bundles of the 120 questions. the best set of parameters were
+chosen based on a grid search for both elm and svm.
+the parameters that were varied for elm were:
+1.
+2.
+
+number of hidden nodes
+activation function (sigmoid / radial basis / hard-limit)
+
+the parameters yielding the best results corresponded to 72 hidden
+nodes using hard-limit activation function.
+the parameters that were varied for svm were:
+1.
+2.
+3.
+
+kernel (sigmoid / radial basis)
+cost value
+gamma value
+
+the parameters yielding the best results corresponded to sigmoid
+kernel, cost value = 1, gamma value = 0.26
+
+4.2.2 comparing four combinations
+with respect to the f1 measure, calculations were done separately
+for the three labels. the mean of those calculations was then used
+as the algorithm’s overall performance measure. with respect to
+elm, the calculation was repeated 10 times because the
+initialization weights are randomly assigned in each iteration. the
+mean value of the f1 measure was taken.
+table 5 below shows the f1 measure values (for each individual
+class and overall f1 mean) for the four combinations. “r” refers to
+remember, “a” refers to apply, “t” refers to transfer and “s.d.”
+refers to standard deviation.
+
+
+
+61
+
+table 5 - f1 measure values for four combinations
+combination
+
+r
+
+a
+
+t
+
+mean
+
+s.d.
+
+1. tf-idf
+with svm
+
+0.870
+
+0.737
+
+0.667
+
+0.758
+
+0.084
+
+2. lda with
+svm
+
+0.400
+
+0.593
+
+0.556
+
+0.516
+
+0.084
+
+3. tf-idf
+with elm
+
+0.926
+
+0.815
+
+0.840
+
+0.860
+
+0.048
+
+4. lda with
+elm
+
+0.467
+
+0.520
+
+0.647
+
+0.545
+
+0.076
+
+tf-idf with elm achieved the highest mean f1 measure value
+and the lowest standard deviation – indicating that it was the most
+reliable combination. it can be seen that the remember label yields
+the highest f1 values out of the three labels in combination 3. in
+general, remember-labeled questions are short, resulting in about
+four to five zero values in the tf-idf vector of 10 columns that is
+passed as an input into the elm. hence, the algorithm identifies
+remember-labeled questions very accurately due to their size.
+the result of high reliability in using elm is as expected because
+it has already been demonstrated that elm outperforms svm when
+comparing in terms of standard deviation of training and testing
+root-mean-square values, time taken, network complexity, as well
+as performance comparison in real medical diagnosis application
+[23]. on the other hand, although lda has been shown to achieve
+higher performance as it groups words together in terms of topics
+instead of looking at combinations of individual words which may
+not link together, in the context of our work, tf-idf outperforms
+lda instead. this is because for lda, the goal is to correctly
+assign each document (or question) to a class label in a reduced
+dimensional space [31]. however, in our corpus of questions, there
+are several technical terms involved, without any prior labeling of
+topics. hence, lda is not appropriate for our analysis.
+
+5. conclusions
+based on the comparison of our four algorithms, our most reliable
+model (tf-idf with elm) is able to accurately label new course
+questions for the undergraduate electrical and electronic
+engineering course with 0.86 reliability in terms of f1 measure.
+any novice instructor who takes over this course in the future or
+teaching assistants tasked with refreshing the course assignments
+would be able to extract new questions from any external source
+and pass them to the algorithm to automatically label the questions
+as the original course coordinator would. this allows members of
+the course design team without a strong background in learning to
+make curriculum decisions regarding the alignment of the course’s
+learning outcomes.
+as discussed earlier, outcome-based learning environments
+facilitate transforming the model of instruction from instructorcentric and lecture-based to being more learner focused filled with
+a variety of activities and learning pathways. however, in learnercentered environments, assessment is still the key driver, and often
+the key inhibitor of learning [3]. if the assessments require shallow
+understanding, then learners calibrate their efforts to achieve this
+low bar. when assessments require deep understanding or great
+proficiency, learners are likely to put in more effortful practice.
+in line with this assessment philosophy, our tf-idf with elm
+model is theoretically capable of matching any learning activity to
+any set of learning outcomes as long as the course designers or
+subject matter experts provide enough examples that are explicitly
+
+aligned to the intended learning outcomes when training the model.
+for the convenience of the subject matter expert in our context, we
+used a reduced version of bloom’s taxonomy in this study.
+however, the final algorithm is capable of using the full bloom’s
+model, a different model, or a custom set of learning outcomes as
+its labeling framework.
+hence, with the high reliability of the prediction algorithm
+presented in our work, our process for calibrating the algorithm can
+be used in any academic or industrial setting to provide the right set
+of formative assessment opportunities to students (enhancing
+subject knowledge) or employees (professional development).
+once the learning outcomes of activities are labeled reliably, it is
+then easier to think about how to engage learners in deliberate
+practice to reach those outcomes and develop their expertise. once
+opportunities for deliberate practice that align to the course learning
+outcomes are implemented into a course, it becomes easier to think
+about how to align the feedback regarding those opportunities to
+support the development of domain expertise.
+this work provides a first step at being able to regularly introduce
+learning activities that promote the development of adaptive
+expertise into a course by matching external sources of activities
+with the course’s learning outcomes. deliberate practice requires
+repetition that varies in ways that highlight the structural elements
+of a domain. having a way to incorporate new sources of questions
+and problems into a course that align with the course’s goals
+provides learners more opportunities for internalizing when to
+apply their domain specific skills and knowledge. finally, our
+algorithm is potentially useful for designing courses to reach noncontent-based learning outcomes, making policies that support
+constructive alignment, and evaluating course assessment of
+learning plans.
+
+6. future work
+building off of our machine learning labeling work, we would like
+to explore constructing a new version of lda that can be tailormade to label questions. there are situations in which weightages
+given to words are the same, with different words representing
+those weightages. similarly, the same words can have different
+weightages. we are keen to continue working on features based on
+word arrangement, word context and word order that affect
+weightage assignments. in addition, elm can be enhanced by
+using kernels.
+from the learning aspect, we would like to extend our question
+label categories to all six outcomes described in bloom’s
+taxonomy and expand the model to label outcomes based on the
+types of sentences used in forum conversations and other
+collaborative learning activities. eventually, we aim to determine
+the proficiency level of learners so we can put learning supports in
+place to guide their learning journeys. ultimately, we wish to
+provide learners with learning activities and opportunities for
+deliberate practice embedded with actionable feedback to develop
+their adaptive expertise.
+
+7. acknowledgments
+this work was conducted within the delta-ntu corporate lab for
+cyber-physical systems with funding support from delta
+electronics inc and the national research foundation (nrf)
+singapore under the corp lab@university scheme.
+
+8. references
+[1] krathwohl, d.r. 2002. a revision of bloom's taxonomy:
+an overview. theory into practice. 41, 4 (2002), 212-218.
+doi= http://dx.doi.org/10.1207/s15430421tip4104_2
+
+
+
+62
+
+[2] biggs, j. 1996. enhancing teaching through constructive
+alignment. higher education. 32, 3 (1996), 347-364. doi=
+http://dx.doi.org/10.1007/bf00138871
+[3] boud, d. 2010. sustainable assessment: rethinking
+assessment for the learning society. studies in continuing
+education. 22, 2 (2010), 151-167. doi=
+http://dx.doi.org/10.1080/713695728
+[4] boud, d. and falchikov, n. 2006. aligning assessment with
+long-term learning. assessment & evaluation in higher
+education. 31, 4 (2006), 399-413. doi=
+http://dx.doi.org/10.1080/02602930600679050
+[5] miller, g. e. 1990. the assessment of clinical
+skills/competence/performance. academic medicine. 65, 9
+(1990), s63-s67. doi=
+http://dx.doi.org/10.1097/00001888-199009000-00045
+[6] wass, v. et al. 2001. assessment of clinical competence.
+the lancet. 357, 9260 (2001), 945-949. doi=
+http://dx.doi.org/10.1016/s0140-6736(00)04221-5
+[7] hmelo-silver, c.e. 2004. problem-based learning: what
+and how do students learn? educational psychology
+review. 16, 3 (2004). 235-266. doi=
+http://dx.doi.org/10.1023/b:edpr.0000034022.16470.f3
+[8] biggs, j. b. and collis, k.f. 2014. evaluating the quality of
+learning: the solo taxonomy (structure of the observed
+learning outcomes). academic press.
+[9] crowe, a. et al. 2008. biology in bloom: implementing
+bloom's taxonomy to enhance student learning in biology.
+cbe-life sciences education. 7, 4 (2008), 368-381. doi=
+http://dx.doi.org/10.1187/cbe.08-05-0024
+[10] ericsson, k.a. et al. 1993. the role of deliberate practice
+in the acquisition of expert performance. psychological
+review. 100, 3 (1993), 363-406. doi=
+http://dx.doi.org/10.1037/0033-295x.100.3.363
+[11] duckworth, a. l. et al. 2007. grit: perseverance and
+passion for long-term goals. journal of personality and
+social psychology. 92, 6 (2007), 1087. doi=
+http://dx.doi.org/10.1037/0022-3514.92.6.1087
+[12] schwartz d. l. et al. 2005. efficiency and innovation in
+transfer. transfer of learning from a modern
+multidisciplinary perspective. information age publishing.
+1-51.
+[13] chi, m. t. 2006. two approaches to the study of experts'
+characteristics. the cambridge handbook of expertise and
+expert performance. cambridge university press. 21-30.
+[14] black, p. and william, d. 1998. assessment and classroom
+learning. assessment in education principles policy and
+practice. 5, 1 (1998), 7-74. doi=
+http://dx.doi.org/10.1080/0969595980050102
+[15] ritter, s. et al. 2007. cognitive tutor: applied research in
+mathematics education. psychonomic bulletin & review. 14,
+2 (2007), 249-255. doi=
+http://dx.doi.org/10.3758/bf03194060
+[16] fei, t. et al. 2003. question classification for e-learning by
+artificial neural network. in proceedings of the 2003 joint
+fourth international conference on information,
+communications and signal processing and the fourth
+pacific rim conference on multimedia (singapore, 2003),
+1-5. doi= http://dx.doi.org/10.1109/icics.2003.1292768
+
+[17] cheng, s. c. et al. 2005. automatic leveling system for elearning examination pool using entropy-based decision
+tree. in advances in web-based learning – icwl 2005
+(hong kong, 2005), 273-278. doi=
+http://dx.doi.org/10.1007/11528043_27
+[18] jayakodi, k. et al. 2015. an automatic classifier for exam
+questions in engineering: a process for bloom's
+taxonomy. in 2015 ieee international conference on
+teaching, assessment, and learning for engineering
+(tale) (zhuhai, china, 2015). doi=
+https://dx.doi.org/10.1109/tale.2015.7386043
+[19] haris, s. s. and omar, n. 2015. bloom's taxonomy question
+categorization using rules and n-gram approach. journal of
+theoretical and applied information technology. 76, 3
+(2015), 401-407.
+[20] yahya, a. a. et al. 2013. analyzing the cognitive level of
+classroom questions using machine learning techniques. in
+the 9th international conference on cognitive science
+(kuching, sarawak, malaysia, 2013). 587-595. doi=
+http://dx.doi.org/10.1016/j.sbspro.2013.10.277
+[21] abduljabbar, d. a. and omar, n. 2015. exam questions
+classification based on bloom's taxonomy cognitive level
+using classifiers combination. journal of theoretical and
+applied information technology. 78, 3 (2015), 447-455.
+[22] sangodiah, a. et al. 2014. a review in feature extraction
+approach in question classification using support vector
+machine. in 2014 ieee international conference on
+control system, computing and engineering (penang,
+malaysia, 2014), 536-541. doi=
+http://dx.doi.org/10.1109/iccsce.2014.7072776
+[23] huang, g. b. et al. 2006. extreme learning machine:
+theory and applications. neurocomputing. 70, 1-3 (2006),
+489-501. doi=
+http://dx.doi.org/10.1016/j.neucom.2005.12.126
+[24] trinity university course assessment and outcomes: 2016
+https://inside.trinity.edu/collaborative/collaborativegrants/course-redesign-stipends/course-assessment-andoutcomes. accessed: 2017-02-24.
+[25] bernardi, r. term frequency and inverted document
+frequency. university of trento, trentino.
+[26] blei, d. m. et al. 2003. latent dirichlet allocation. journal
+of machine learning research. 3 (2003), 993-1022.
+[27] huang, g. b. 2015. what are extreme learning machines?
+filling the gap between frank rosenblatt’s dream and
+john von neumann’s puzzle. cognitive computation. 7, 3
+(2015), 263-278. doi= http://dx.doi.org/10.1007/s12559015-9333-0
+[28] weston, j. support vector machine (and statistical
+learning theory). nec labs america, princeton.
+[29] chang, c. c. and lin, c. j. 2011. libsvm: a library for
+support vector machines. acm transactions on
+intelligent systems and technology (tist). 2, 3 (2011), 139. doi= http://dx.doi.org/10.1145/1961189.1961199
+[30] santra, a. k. and christy, c. j. 2012. genetic algorithm
+and confusion matrix for document clustering. ijcsi
+international journal of computer science issues. 9, 1
+(2012), 322-328.
+[31] hu, d. j. 2009. latent dirichlet allocation for text,
+images, and music.
+
+
+
+63
+
+behavior-based latent variable model
+for learner engagement
+andrew s. lan1 , christopher g. brinton2 , tsung-yen yang3 , mung chiang1
+1
+
+princeton university, 2 zoomi inc., 3 national chiao tung university
+
+andrew.lan@princeton.edu, christopher.brinton@zoomiinc.com, tsungyenyang.eecs02@nctu.edu.tw, chiangm@princeton.edu
+
+abstract
+we propose a new model for learning that relates videowatching behavior and engagement to quiz performance. in
+our model, a learner’s knowledge gain from watching a lecture
+video is treated as proportional to their latent engagement
+level, and the learner’s engagement is in turn dictated by a set
+of behavioral features we propose that quantify the learner’s
+interaction with the lecture video. a learner’s latent concept
+knowledge is assumed to dictate their observed performance
+on in-video quiz questions. one of the advantages of our
+method for determining engagement is that it can be done
+entirely within standard online learning platforms, serving
+as a more universal and less invasive alternative to existing
+measures of engagement that require the use of external
+devices. we evaluate our method on a real-world massive
+open online course (mooc) dataset, from which we find that
+it achieves high quality in terms of predicting unobserved
+first-attempt quiz responses, outperforming two state-of-theart baseline algorithms on all metrics and dataset partitions
+tested. we also find that our model enables the identification
+of key behavioral features (e.g., larger numbers of pauses
+and rewinds, and smaller numbers of fast forwards) that are
+correlated with higher learner engagement.
+
+keywords
+behavioral data, engagement, latent variable model, learning
+analytics, mooc, performance prediction
+
+1.
+
+introduction
+
+the recent and rapid development of online learning platforms, coupled with advancements in machine learning, has
+created an opportunity to revamp the traditional “one-sizefits-all” approach to education. this opportunity is facilitated
+by the ability of many learning platforms, such as massive
+open online course (mooc) platforms, to collect several
+different types of data on learners, including their assessment
+responses as well as their learning behavior [9]. the focus
+of this work is on using different forms of data to model
+the learning process, which can lead to effective learning
+analytics and potentially improve learning efficacy.
+
+1.1
+
+behavior-based learning analytics
+
+current approaches to learning analytics are focused mainly
+on providing feedback to learners about their knowledge
+states – or the level to which they have mastered given concepts/topics/knowledge components – through analysis of
+their responses to assessment questions [10, 24]. there are
+other cognitive (e.g., engagement [17, 31], confusion [37], and
+
+emotion [11]) as well as non-cognitive (e.g., fatigue, motivation, and level of financial support [14]) factors beyond
+assessment performance that are crucial to the learning process as well. accounting for them thus has the potential to
+yield more effective learning analytics and feedback.
+to date, it has been difficult to measure these factors of the
+learning process. contemporary online learning platforms,
+however, have the capability to collect behavioral data that
+can provide some indicators of them. this data commonly
+includes learners’ usage patterns of different types of learning
+resources [12, 15], their interactions with others via social
+learning networks [7, 28], their clickstream and keystroke activity logs [2, 8, 30], and sometimes other metadata including
+facial expressions [35] and gaze location [6].
+recent research has attempted to use behavioral data to
+augment learning analytics. [5] proposed a latent response
+model to classify whether a learner is gaming an intelligent
+tutoring system, for example. several of these works have
+sought to demonstrate the relationship between behavior and
+performance of learners in different scenarios. in the context
+of moocs, [22] concluded that working on more assignments
+lead to better knowledge transfer than only watching videos,
+[12] extracted probabilistic use cases of different types of
+learning resources and showed they are predictive of certification, [32] used discussion forum activity and topic analysis to
+predict test performance, and [26] discovered that submission
+activities can be used to predict final exam scores. in other
+educational domains, [2] discovered that learner keystroke
+activity in essay-writing sessions is indicative of essay quality, [29] identified behavior as one of the factors predicting
+math test achievement, and [25] found that behavior is predictive of whether learners can provide elegant solutions to
+mathematical questions.
+in this work, we are interested in how behavioral data can
+be used to model a learner’s engagement.
+
+1.2
+
+learner engagement
+
+monitoring and fostering engagement is crucial to education,
+yet defining it concretely remains elusive. research has
+sought to identify factors in online learning that may drive
+engagement; for example, [17] showed that certain production
+styles of lecture videos promote it. [20] defined disengagement
+as dropping out in the middle of a video and studied the
+relationship between disengagement and video content, while
+[31] considered the relationship between engagement and the
+
+
+
+64
+
+semantic features of mathematical questions that learners
+respond to. [33] studied the relationship between learners’
+self-reported engagement levels in a learning session and their
+facial expressions immediately following in-session quizzes,
+and [34] considered how engagement is related to linguistic
+features of discussion forum posts.
+there are many types of engagement [3], with the type of
+interest depending on the specific learning scenario. several
+approaches have been proposed for measuring and quantifying different types. these approaches can be roughly
+divided into two categories: device-based and activity-based.
+device-based approaches measure learner engagement using
+devices external to the learning platform, such as cameras to
+record facial expressions [35], eye-tracking devices to detect
+mind wandering while reading text documents [6], and pupil
+dilation measurements, which are claimed to be highly correlated with engagement [16]. activity-based approaches, on
+the other hand, measure engagement using heuristic features
+constructed from learners’ activity logs; prior work includes
+using replies/upvote counts and topic analysis of discussions
+[28], and manually defining different engagement levels based
+on activity types found in moocs [4, 21].
+both of these types have their drawbacks. device-based
+approaches are far from universal in standard learning platforms because they require integration with external devices.
+they are also naturally invasive and carry potential privacy
+risks. activity-based approaches, on the other hand, are
+not built on the same granularity of data, and tend to be
+defined from heuristics that have no guarantee of correlating
+with learning outcomes. it is therefore desirable to develop a
+statistically principled, activity-based approach to inferring
+a learner’s engagement.
+
+1.3
+
+our approach and contributions
+
+in this paper, we propose a probabilistic model for inferring a
+learner’s engagement level by treating it as a latent variable
+that drives the learner’s performance and is in turn driven
+by the learner’s behavior. we apply our framework to a
+real-world mooc dataset consisting of clickstream actions
+generated as learners watch lecture videos, and question
+responses from learners answering in-video quiz questions.
+we first formalize a method for quantifying a learner’s behavior while watching a video as a set of nine behavioral features
+that summarize the clickstream data generated (section 2).
+these features are intuitive quantities such as the fraction
+of video played, the number of pauses made, and the average playback rate, some of which have been associated with
+performance previously [8]. then, we present our statistical
+model of learning (section 3) as two main components: a
+learning model and a response model. the learning model
+treats a learner’s gain in concept knowledge as proportional
+to their latent engagement level while watching a lecture
+video. concept knowledge is treated as multidimensional, on
+a set of latent concepts underlying the course, and videos
+are associated with varying levels to different concepts. the
+response model treats a learner’s performance on in-video
+quiz questions, in turn, as proportional to their knowledge
+on the concepts that this particular question relates to.
+by defining engagement to correlate directly with perfor-
+
+mance, we are able to learn which behavioral features lead to
+high engagement through a single model. this differs from
+prior works that first define heuristic notions of engagement
+and subsequently correlate engagement with performance,
+in separate procedures. moreover, our formulation of latent
+engagement can be made from entirely within standard learning platforms, serving as a more universally applicable and
+less invasive alternative to device-based approaches.
+finally, we evaluate two different aspects of our model (section 4): its ability to predict unobserved, first-attempt quiz
+question responses, and its ability to provide meaningful
+analytics on engagement. we find that our model predicts
+with high quality, achieving aucs of up to 0.76, and outperforming two state-of-the-art baselines on all metrics and
+dataset partitions tested. one of the partitions tested corresponds to the beginning of the course, underscoring the
+ability of our model to provide early detection of struggling
+or advanced students. in terms of analytics, we find that
+our model enables us to identify behavioral features (e.g.,
+large numbers of pauses and rewinds, and small numbers of
+fast forwards) that indicate high learner engagement, and to
+track learners’ engagement patterns throughout the course.
+more generally, these findings can enable an online learning platform to detect learner disengagement and perform
+appropriate interventions in a fully automated manner.
+
+2.
+
+behavioral data
+
+in this section, we start by detailing the setup of lecture
+videos and quizzes in moocs. we then specify videowatching clickstream data and our method for summarizing
+it into behavioral features.
+
+2.1
+
+course setup and data capture
+
+we are interested in modeling learner engagement while
+watching lecture videos to predict their performance on invideo quiz questions. for this purpose, we can view an
+instructor’s course delivery as the sequence of videos that
+learners will watch interspersed with the quiz questions they
+will answer. let q = (q1 , q2 , . . .) be the sequence of questions
+asked through the course. a video could have any number
+of questions generally, including none; to enforce a 1:1 correspondence between video content and questions, we will
+consider the “video” for question qn to be all video content
+that appears between qn−1 and qn . based on this, we will
+explain the formats of video-watching and quiz response data
+we work with in this section.
+our dataset. the dataset we will use is from the fall 2012
+offering of the course networks: friends, money, and bytes
+(fmb) on coursera [1]. this course has 92 videos distributed
+among 20 lectures, and exactly one question per video.
+
+2.1.1
+
+video-watching clickstreams
+
+when a learner watches a video on a mooc, their behavior
+is typically recorded as a sequence of clickstream actions.
+in particular, each time a learner makes an action – play,
+pause, seek, ratechange, open, or close – on the video
+player, a clickstream event is generated. formally, the ith
+event created for the course will be in the format
+ei =< ui , vi , ei , p0i , pi , xi , si , ri >
+
+
+
+65
+
+here, ui and vi are the ids of the specific learner (user) and
+video, respectively, and ei is the type of action that ui made
+on vi . pi is the position of the video player (in seconds)
+immediately after ei is made, p0i is the position immediately
+before,1 xi is the unix timestamp (in seconds) at which ei
+was fired, si is the binary state of the video player – either
+playing or paused – once this action is made, and ri is the
+playback rate of the video player once this action is made.
+our fmb dataset has 314,632 learner-generated clickstreams
+from 3,976 learners.2
+the set eu,v = {ei |ui = u, vi = v} of clickstreams for learner
+u recorded on video v can be used to reconstruct the behavior
+u exhibits on v. in section 2.2 we will explain the features
+computed from eu,v to summarize this behavior.
+
+figure 1: distribution of the number of videos that
+each each learner completed in fmb. more than
+85% of learners completed less than 20 videos.
+
+2.1.2 quiz responses
+when a learner submits a response to an in-video quiz question, an event is generated in the format
+am =< um , vm , xm , am , ym >
+again, um and vm are the learner and video ids (i.e., the
+quiz corresponding to the video). xm is the unix timestamp
+of the submission, am is the specific response, and ym is the
+number of points awarded for the response. the questions
+in our dataset are multiple choice with a single response, so
+ym is binary-valued.
+in this work, we are interested in whether quiz responses
+were correct on first attempt (cfa) or not. as a result,
+with au,v = {am |um = u, vm = v}, we consider the event
+a0u,v in this set with the earliest timestamp x0u,v . we also
+0
+only consider the set of clickstreams eu,v
+⊆ eu,v that occur
+before x0u,v , as the ones after would be anti-causal to cfa.
+
+2.2
+
+behavioral features and cfa score
+
+0
+with the data eu,v
+and a0u,v , we construct two sets of information for each learner u on each video v, i.e., each
+learner-video pair. first is a set of nine behavioral features
+that summarize u’s video-watching behavior on v [8]:
+
+(3) fraction played. the fraction of the video that the
+learner played relative to the length. formally, it is calculated
+as gu,v /lv , where
+gu,v =
+
+x
+i∈s
+
+is the total length of video that was played (while in the
+playing state). here, s = {i ∈ a0u,v : ai+1 6= open ∧ si =
+playing}.
+(4) fraction paused. the fraction of time the learner
+stayed paused on the video relative to the length. it is
+calculated as hu,v /lv , where
+hu,v =
+
+x
+i∈s
+
+eu,v =
+
+x
+i∈s
+
+min(xi+1 − xi , lv )
+
+is the elapsed time on v obtained by finding the total unix
+time for u on v, and lv is the length of the video (in seconds).
+here, s = {i ∈ a0u,v : ai+1 6= open}. lv is included as an
+upper bound for excessively long intervals of time.
+(2) fraction completed. the fraction of the video that the
+learner completed, between 0 (none) and 1 (all). formally,
+it is cu,v /lv , where cu,v is the number of unique 1 second
+segments of the video that the learner visited.
+
+(5) number of pauses. the number of times the learner
+paused the video, or
+
+x
+
+pi and p0i will only differ when i is a skip event.
+this number excludes invalid stall, null, and error events,
+as well as open and close events which are generated automatically.
+
+1{ai = pause}
+
+where 1{} is the indicator function.
+(6) number of rewinds. the number of times the learner
+skipped backwards in the video, or
+
+x
+
+i∈a0u,v
+
+1{ai = skip ∧ p0i < pi }
+
+(7) number of fast forwards. the number of times the
+learner skipped forward in the video, i.e., with p0i > pi in the
+previous equation.
+(8) average playback rate. the time-average of the
+learner’s playback rate on the video. formally, it is calculated
+as
+
+1
+
+2
+
+min(ti+1 − ti , lv )
+
+is the total time the learner stayed in the paused state on this
+video. here, s = {i ∈ a0u,v : ai+1 6= open ∧ si = paused}.
+
+i∈a0u,v
+
+(1) fraction spent. the fraction of time the learner spent
+on the video, relative to the playback length of the video.
+formally, this quantity is eu,v /lv , where
+
+min(p0i+1 − pi , lv )
+
+r̄u,v =
+
+p
+i∈s ri · min(xi+1 − xi , lv )
+p
+i∈s
+
+where s = {i ∈
+
+a0u,v
+
+
+
+min(xi+1 − xi , lv )
+
+: ai+1 6= open ∧ si = playing}.
+
+66
+
+(9) standard deviation of playback rate. the standard
+deviation of the learner’s playback rate. it is calculated as
+
+ p
+
+i∈s (ri
+
+− r̄u,v )2 · min(xi+1 − xi , lv )
+i∈s min(xi+1 − xi , lv )
+
+p
+
+with the same s as the average playback rate.
+the second piece of information for each learner-video pair
+is u’s cfa score yu,v ∈ {0, 1} on the quiz question for v.
+
+2.3
+
+dataset subsets
+
+we will consider different groups of learner-video pairs when
+evaluating our model in section 4. our motivation for doing
+so is the heterogeneity of learner motivation and high dropoff
+rates in moocs [9]: many will quit the course after watching
+just a few lectures. modeling in a small subset of data,
+particularly those at the beginning of the course, is desirable
+because it can lead to “early detection” of those who may
+drop out [8].
+figure 1 shows the dropoff for our dataset in terms of the
+number of videos each learner completed: more than 85%
+of learners completed just 20% of the course. “completed”
+is defined here as having watched some of the video and
+responded to the corresponding question. let tu be the
+number of videos learner u completed and γ(v) be the index
+of video v in the course, we define ωu0 ,v0 = {(u, v) : tu ≥
+u0 ∧ γ(v) ≤ v0 } to be the subset of learner-video pairs
+such that u completed at least u0 videos and v is within the
+first v0 videos. the full dataset is ω1,92 , and we will also
+consider ω20,92 as the subset of 346 active learners over the
+full course and ω1,20 as the subset of all learners over the
+first two weeks3 in our evaluation.
+
+3.
+
+statistical model of learning
+with latent engagement
+
+in this section, we propose our statistical model. let u
+denote the number of learners (indexed by u) and v the
+number of videos (indexed by v). further, we use tu to
+denote the number of time instances registered by learner
+u (indexed by t); we take a time instance to be a learner
+completing a video, i.e., watching a video and answering the
+corresponding quiz question. for simplicity, we use a discrete
+notion of time, i.e., each learner-video pair will correspond
+to one time instance for one learner.
+our model considers learners’ responses to quiz questions
+as measurements of their underlying knowledge on a set of
+concepts; let k denote the number of such concepts. further,
+our model considers the action of watching lecture videos
+as part of learning that changes learners’ latent knowledge
+states over time. these different aspects of the model are
+visualized in figure 2: there are two main components, a
+response model and a learning model.
+
+3.1
+
+response model
+
+our statistical model of learner responses is given by
+t
+(t)
+p(yu(t) = 1|c(t)
+u ) = σ(wv(u,t) cu − µv(u,t) + au ),
+3
+
+(1)
+
+in fmb, the first two weeks of lectures is the first 20 videos.
+
+figure 2: our proposed statistical model of learning
+consists of two main parts, a response model and a
+learning model.
+where v(u, t) : ω ⊆ {1, . . . , u } × {1, . . . , maxu tu } →
+{1, . . . , v } denotes a mapping from a learner index-time
+index pair to the index of the video v that u was watching at
+(t)
+t. yu ∈ {0, 1} is the binary-valued cfa score of learner u
+on the quiz question corresponding to the video they watch
+at time t, with 1 denoting a correct response (cfa) and 0
+denoting an incorrect response (non-cfa).
+the variable wv ∈ rk
++ denotes the non-negative, kdimensional quiz question–concept association vector that
+characterizes how the quiz question corresponding to video v
+tests learners’ knowledge on each concept, and the variable
+µv is a scalar characterizing the intrinsic difficulty of the quiz
+(t)
+question. cu is the k-dimensional concept knowledge vector
+of learner u at time t, characterizing the knowledge level of
+the learner on each concept at the time, and au denotes the
+static, intrinsic ability of learner u. finally, σ(x) = 1+e1−x is
+the sigmoid function.
+we restrict the question–concept association vector wv to be
+non-negative in order to make the parameters interpretable
+[24]. under this restriction, the values of concept knowledge
+(t)
+vector cu can be understood as follows: large, positive values
+lead to higher chances of answering a question correctly, thus
+corresponding to high knowledge, while small, negative values
+lead to lower chances of answering a question correctly, thus
+corresponding to low knowledge.
+
+3.2
+
+learning model
+
+our model of learning considers transitions in learners’ knowledge states as induced by watching lecture videos. it is given
+by
+(t−1)
+c(t)
++ e(t)
+u = cu
+u dv(u,t) ,
+
+t = 1, . . . , tu ,
+
+(2)
+
+where the variable dv ∈ rk
++ denotes the non-negative, kdimensional learning gain vector for video v; each entry
+characterizes the degree to which the video improves learners’
+knowledge level on each concept. the assumption of nonnegativity on dv implies that videos will not negatively affect
+(0)
+learners’ knowledge, as in [23]. cu is the initial knowledge
+state of learner u at time t = 0, i.e., before starting the
+
+
+
+67
+
+ω20,92
+
+ω1,20
+
+ω1,92
+
+acc
+
+auc
+
+acc
+
+auc
+
+acc
+
+auc
+
+proposed model
+
+0.7293±0.0070
+
+0.7608±0.0094
+
+0.7096±0.0057
+
+0.7045±0.0066
+
+0.7058±0.0054
+
+0.7216±0.0054
+
+sparfa
+
+0.7209±0.0070
+
+0.7532±0.0098
+
+0.7061±0.0069
+
+0.7020±0.0070
+
+0.6975±0.0048
+
+0.7124±0.0050
+
+bkt
+
+0.7038±0.0084
+
+0.7218±0.0126
+
+0.6825±0.0058
+
+0.6662±0.0065
+
+0.6803±0.0055
+
+0.6830±0.0059
+
+table 1: quality comparison of the different algorithms on predicting unobserved quiz question responses.
+the obtained acc and auc metrics on different subsets of the fmb dataset are given. our proposed model
+obtains higher quality than the sparfa and bkt baselines in each case.
+course and watching any video.
+(t)
+
+the scalar latent variable eu ∈ [0, 1] in (2) characterizes
+the engagement level that learner u exhibits when watching
+video v(u, t) at time t. this is in turn modeled as
+t (t)
+e(t)
+u = σ(β fu ),
+
+(3)
+
+(t)
+
+where fu is a 9-dimensional vector of the behavioral features
+defined in section 2.2, summarizing learner u’s behavior while
+the video at time t. β is the unknown, 9-dimensional parameter vector that characterizes how engagement associates
+with each behavioral feature.
+taken together, (2) and (3) state that the knowledge gain a
+learner will experience on a particular concept while watching
+a particular video is given by
+(i) the video’s intrinsic association with the concept, modulated by
+(ii) the learner’s engagement while watching the video, as
+manifested by their clickstream behavior.
+from (2), a learner’s (latent) engagement level dictates the
+fraction of the video’s available learning gain they acquire
+to improve their knowledge on each concept. the response
+model (1) in turn holds that performance is dictated by a
+learner’s concept knowledge states. in this way, engagement
+is directly correlated with performance through the concept
+knowledge states. note that in this paper, we treat the en(t)
+gagement variable eu as a scalar; the extension of modeling
+it as a vector and thus separating engagement by concept is
+part of our ongoing work.
+it is worth mentioning the similarity between our characterization of engagement as a latent variable in the learning
+model and the input gate variables in long-short term memory (lstm) neural networks [18]. in lstm, the change
+in the latent memory state (loosely corresponding to the
+(t)
+latent concept knowledge state vector cu ) is given by the
+input vector (loosely corresponding to the video learning
+gain vector dv ) modulated by a set of input gate variables
+(t)
+(corresponding to the engagement variable eu ).
+parameter inference. our statistical model of learning
+and response can be seen as a particular type of recurrent neural network (rnn). therefore, for parameter inference, we
+implement a stochastic gradient descent algorithm with standard backpropagation. given the graded learner responses
+(t)
+(t)
+yu and behavioral features fu , our parameter inference
+
+algorithm estimates the quiz question–concept association
+vectors wv , the quiz question intrinsic difficulties µv , the the
+video learning gain vectors dv , the learner initial knowledge
+(0)
+vectors cu , the learner abilities au , and the engagement–
+behavioral feature association vector β. we omit the details
+of the algorithm for simplicity of exposition.
+
+4.
+
+experiments
+
+in this section, we evaluate the proposed latent engagement
+model on the fmb dataset. we first demonstrate the gain
+in predictive quality of the proposed model over two baseline
+algorithms (section 4.1), and then show how our model can
+be used to study engagement (section 4.2).
+
+4.1
+
+predicting unobserved responses
+
+we evaluate our proposed model’s quality by testing its
+ability to predict unobserved quiz question responses.
+baselines. we compare our model against two well-known,
+state-of-the-art response prediction algorithms that do not
+use behavioral data. first is the sparse factor analysis
+(sparfa) algorithm [24], which factors the learner-question
+matrix to extract latent concept knowledge, but does not use
+a time-varying model of learners’ knowledge states. second is
+a version of the bayesian knowledge tracing (bkt) algorithm
+that tracks learners’ time-varying knowledge states, which
+incorporates a set of guessing and slipping probability parameters for each question, a learning probability parameter
+for each video, and an initial knowledge level parameter for
+each learner [13, 27].
+
+4.1.1
+
+experimental setup and metrics
+
+regularization. in order to prevent overfitting, we add
+`2 -norm regularization terms to the overall optimization
+objective function for every set of variables in both the
+proposed model and in sparfa. we use a parameter λ to
+control the amount of regularization on each variable.
+cross validation. we perform 5-fold cross validation on
+the full dataset (ω1,92 ), and on each subset of the dataset
+introduced in section 2.3 (ω20,92 and ω1,20 ). to do so, we
+randomly partition each learner’s quiz question responses
+into 5 data folds. leaving out one fold as the test set, we use
+the remaining four folds as training and validation sets to
+select the values of the tuning parameters for each algorithm,
+i.e., by training on three of the folds and validating on the
+other. we then train every algorithm on all four observed
+folds using the tuned values of the parameters, and evaluate
+them on the holdout set. all experiments are repeated for
+20 random partitions of the training and test sets.
+for the proposed model and for sparfa, we tune both the
+
+
+
+68
+
+feature
+
+coefficient
+
+fraction spent
+
+0.1941
+
+fraction completed
+
+0.1443
+
+fraction played
+
+0.2024
+
+fraction paused
+
+0.0955
+
+number of pauses
+
+0.2233
+
+number of rewinds
+number of fast forwards
+average playback rate
+standard deviation of playback rate
+
+0.4338
+−0.1551
+0.2797
+
+0.0314
+
+table 2: regression coefficient vector β learned over
+the full dataset, associating each clickstream feature
+to engagement. all but one of the features (number
+of fast forwards) is positively correlated with engagement.
+number of concepts k ∈ {2, 4, 6, 8, 10} and the regularization parameter λ ∈ {0.5, 1.0, . . . , 10.0}. note that for the
+proposed model, when a question response is left out as part
+of the test set, only the response is left out of the training
+set: the algorithm still uses the clickstream data for the
+corresponding learner-video pair to model engagement.
+metrics. to evaluate the quality of the algorithms, we
+employ two commonly used binary classification metrics:
+prediction accuracy (acc) and area under the receiver operating characteristic curve (auc) [19]. the acc metric is
+simply the fraction of predictions that are made correctly,
+while the auc measures the tradeoff between the true and
+false positive rates of the classifier. both metrics take values
+in [0, 1], with larger values indicating higher quality.
+
+4.1.2 results and discussion
+table 1 gives the evaluation results for the three algorithms.
+the average and standard deviation over the 20 random data
+partitions are reported for each dataset group and metric.
+first of all, the results show that our proposed model consistently achieves higher quality than both baseline algorithms
+on both metrics. it significantly outperforms bkt in particular (sparfa also outperforms bkt). this shows the
+potential of our model to push the envelope on achievable
+quality in performance prediction research.
+notice that our model achieves its biggest quality improvement on the full dataset, with a 1.3% gain in auc over
+sparfa and a 5.7% gain over bkt. this observation suggests that as more clickstream data is captured and available
+for modeling – especially as we observe more video-watching
+behavioral data from learners over a longer period of time
+(the full dataset ω1,92 contains clickstream data for up to
+12 weeks, while the ω1,20 subset only contains data for the
+first 2 weeks) – the proposed model achieves more significant
+quality enhancements over the baseline algorithms. this
+is somewhat surprising, since prior work on behavior-based
+performance prediction [8] has found the largest gains in the
+presence of fewer learner-video pairs, i.e., before there are
+many question responses for other algorithms to model on.
+but our algorithm also benefits from additional question re-
+
+(t)
+
+figure 3: plot of the latent engagement level ej
+over time for one third of the learners in fmb, showing a diverse set of behaviors across learners.
+
+sponses, to update its learned relationship between behavior
+and concept knowledge.
+the first two weeks of data (ω1,20 ) is sparse in that the
+majority of learners answer at most a few questions during
+this time, many of whom will drop out (see figure 1). in
+this case, our model obtains a modest improvement over
+sparfa, which is static and uses fewer parameters. the
+gain over bkt is particularly pronounced, at 5.7%. this,
+combined with the findings for active learners over the full
+course (ω20,92 ), shows that observing video-watching behavior of learners who drop out of the course in its early states
+(these learners are excluded from ω20,92 ) leads to a slight
+increase in the performance gain of the proposed model over
+the baseline algorithms. importantly, this shows that our
+algorithm provides benefit for early detection, with the ability
+to predict performance of learners who will end up dropping
+out [8].
+
+4.2
+
+analyzing engagement
+
+given predictive quality, one benefit of our model is that it
+can be used to analyze engagement. the two parameters to
+consider for this are the regression coefficient vector β and
+(t)
+the engagement scalar eu itself.
+behavior and engagement. table 2 gives each of the
+estimated feature coefficients in β for the full dataset ω1,92 ,
+with regularization parameters chosen via cross validation.
+all of the features except for the number of fast forwards are
+positively correlated with the latent engagement level. this
+is to be expected since many of the features are associated
+with processing more video content, e.g., spending more
+time, playing more, or pausing longer to reflect, while fast
+forwarding involves skipping over the content.
+the features that contribute most to high latent engagement
+levels are the number of pauses, the number of rewinds, and
+the average playback rate. the first two of these are likely
+indicators of actual engagement as well, since they indicate
+whether the learner was thinking while pausing the video
+or re-visiting earlier content which contains knowledge that
+they need to recall or revise. the strong, positive correlation
+of average playback rate is somewhat surprising though:
+we may expect that a higher playback rate would have a
+
+
+
+69
+
+(a) learners that consistently exhibit
+high engagement and finish the course.
+
+(b) learners that exhibit high engagement but drop out early.
+(t)
+
+figure 4: plot of the latent engagement level ej
+
+over time for selected learners in three different groups.
+
+negative impact on engagement, like fast forwarding does, as
+it involves speeding through content. on the other hand, it
+may be an indication that learners are more focused on the
+material and trying to keep their interest higher.
+engagement over time. figure 3 visualizes the evolution
+(t)
+of eu over time for 1/3 of the learners (randomly selected).
+patterns in engagement differs substantially across learners;
+those who finish the course mostly exhibit high engagement
+levels throughout, while those who drop out early vary greatly
+in their engagement, some high and others low.
+figure 4 breaks down the learners into three different types
+according to their engagement patterns, and plots their engagement levels over time separately. the first type of learner
+(a) finishes the course and consistently exhibits high engagement levels throughout the duration. the second type (b)
+also consistently exhibits high engagement levels, but drops
+out of the course after up to three weeks. the third type of
+learner (c) exhibits inconsistent engagement levels before an
+early dropout. equipped with temporal plots like these, an
+instructor could determine which learners may be in need
+of intervention, and could design different interventions for
+different engagement clusters [8, 36].
+
+5.
+
+(c) learners that exhibit inconsistent
+engagement and drop out.
+
+conclusions and future work
+
+in this paper, we proposed a new statistical model for learning, based on learner behavior while watching lecture videos
+and their performance on in-video quiz questions. our model
+has two main parts: (i) a response model, which relates a
+learner’s performance to latent concept knowledge, and (ii)
+a learning model, which relates the learner’s concept knowledge in turn to their latent engagement level while watching
+videos. through evaluation on a real-world mooc dataset,
+we showed that our model can predict unobserved question
+responses with superior quality to two state-of-the-art baselines, and also that it can lead to engagement analytics: it
+identifies key behavioral features driving high engagement,
+and shows how each learner’s engagement evolves over time.
+our proposed model enables the measurement of engagement
+solely from data that is logged within online learning platforms: clickstream data and quiz responses. in this way, it
+serves as a less invasive alternative to current approaches
+for measuring engagement that require external devices, e.g.,
+cameras and eye-trackers [6, 16, 35]. one avenue of future
+work is to conduct an experiment that will correlate our
+definition of latent engagement with these methods.
+
+additionally, one could test other, more sophisticated characterizations of the latent engagement variable. one such
+approach could seek to characterize engagement as a function of learners’ previous knowledge level. an alternative or
+addition to this would be a generative modeling approach of
+engagement to enable the prediction of future engagement
+given each learner’s learning history.
+one of the long-term, end-all goals of this work is the design
+of a method for useful, real-time analytics to instructors. the
+true test of this ability comes from incorporating the method
+into a learning system, providing its outputs – namely, performance prediction forecasts and engagement evolution – to
+an instructor through the user interface, and measuring the
+resulting improvement in learning outcomes.
+
+acknowledgments
+thanks to debshila basu mallick for discussions on the
+different types of engagement.
+
+6.
+
+references
+
+[1] networks: friends, money, and bytes. https:
+//www.coursera.org/course/friendsmoneybytes.
+[2] l. allen, m. jacovina, m. dascalu, r. roscoe, k. kent,
+a. likens, and d. mcnamara. {enter}ing the time
+series {space}: uncovering the writing process
+through keystroke analyses. in proc. intl. conf. educ.
+data min., pages 22–29, june 2016.
+[3] a. anderson, s. christenson, m. sinclair, and c. lehr.
+check & connect: the importance of relationships for
+promoting engagement with school. j. school psychol.,
+42(2):95–113, mar. 2004.
+[4] a. anderson, d. huttenlocher, j. kleinberg, and
+j. leskovec. engaging with massive online courses. in
+proc. intl. conf. world wide web, pages 687–698, apr.
+2014.
+[5] r. baker, a. corbett, and k. koedinger. detecting
+student misuse of intelligent tutoring systems. in proc.
+intl. conf. intell. tutoring syst., pages 531–540, aug.
+2004.
+[6] r. bixler and s. d’mello. automatic gaze-based
+user-independent detection of mind wandering during
+computerized reading. user model. user-adapt.
+interact., 26(1):33–68, mar. 2016.
+[7] c. brinton, s. buccapatnam, f. wong, m. chiang, and
+h. poor. social learning networks: efficiency
+optimization for mooc forums. in proc. ieee conf.
+
+
+
+70
+
+comput. commun., pages 1–9, apr. 2016.
+[8] c. brinton and m. chiang. mooc performance
+prediction via clickstream data and social learning
+networks. in proc. ieee conf. comput. commun.,
+pages 2299–2307, april 2015.
+[9] c. brinton, r. rill, s. ha, m. chiang, r. smith, and
+w. ju. individualization for education at scale: miic
+design and preliminary evaluation. ieee trans. learn.
+technol., 8(1):136–148, jan. 2015.
+[10] h. cen, k. koedinger, and b. junker. learning factors
+analysis – a general method for cognitive model
+evaluation and improvement. in proc. intl. conf. intell.
+tutoring syst., pages 164–175, june 2006.
+[11] l. chen, x. li, z. xia, z. song, l. morency, and
+a. dubrawski. riding an emotional roller-coaster: a
+multimodal study of young child’s math problem
+solving activities. in proc. intl. conf. educ. data min.,
+pages 38–45, june 2016.
+[12] c. coleman, d. seaton, and i. chuang. probabilistic
+use cases: discovering behavioral patterns for
+predicting certification. in proc. acm conf. learn at
+scale, pages 141–148, mar. 2015.
+[13] a. corbett and j. anderson. knowledge tracing:
+modeling the acquisition of procedural knowledge. user
+model. user-adapt. interact., 4(4):253–278, dec. 1994.
+[14] c. farrington, m. roderick, e. allensworth,
+j. nagaoka, t. keyes, d. johnson, and n. beechum.
+teaching adolescents to become learners: the role of
+noncognitive factors in shaping school performance–a
+critical literature review. consortium on chicago
+school research, 2012.
+[15] b. gelman, m. revelle, c. domeniconi, a. johri, and
+k. veeramachaneni. acting the same differently: a
+cross-course comparison of user behavior in moocs. in
+proc. intl. conf. educ. data min., pages 376–381, june
+2016.
+[16] m. gilzenrat, j. cohen, j. rajkowski, and
+g. aston-jones. pupil dynamics predict changes in task
+engagement mediated by locus coeruleus. in proc. soc.
+neurosci. abs., page 19, nov. 2003.
+[17] p. guo, j. kim, and r. rubin. how video production
+affects student engagement: an empirical study of
+mooc videos. in proc. acm conf. learn at scale,
+pages 41–50, mar. 2014.
+[18] s. hochreiter and j. schmidhuber. long short-term
+memory. neural comput., 9(8):1735–1780, nov. 1997.
+[19] h. jin and c. ling. using auc and accuracy in
+evaluating learning algorithms. ieee trans. knowl.
+data eng., 17(3):299–310, mar. 2005.
+[20] j. kim, p. guo, d. seaton, p. mitros, k. gajos, and
+r. miller. understanding in-video dropouts and
+interaction peaks in online lecture videos. in proc.
+acm conf. learn at scale, pages 31–40, mar. 2014.
+[21] r. kizilcec, c. piech, and e. schneider. deconstructing
+disengagement: analyzing learner subpopulations in
+massive open online courses. in proc. intl. conf. learn.
+analyt. knowl., pages 170–179, apr. 2013.
+[22] k. koedinger, j. kim, j. jia, e. mclaughlin, and
+n. bier. learning is not a spectator sport: doing is
+better than watching for learning from a mooc. in
+proc. acm conf. learn at scale, pages 111–120, mar.
+2015.
+
+[23] a. lan, c. studer, and r. baraniuk. time-varying
+learning and content analytics via sparse factor
+analysis. in proc. acm sigkdd intl. conf. knowl.
+discov. data min., pages 452–461, aug. 2014.
+[24] a. lan, a. waters, c. studer, and r. baraniuk. sparse
+factor analysis for learning and content analytics. j.
+mach. learn. res., 15:1959–2008, june 2014.
+[25] l. malkiewich, r. baker, v. shute, s. kai, and
+l. paquette. classifying behavior to elucidate elegant
+problem solving in an educational game. in proc. intl.
+conf. educ. data min., pages 448–453, june 2016.
+[26] j. mcbroom, b. jeffries, i. koprinska, and k. yacef.
+mining behaviours of students in autograding
+submission system logs. in proc. intl. conf. educ. data
+min., pages 159–166, june 2016.
+[27] z. pardos and n. heffernan. modeling individualization
+in a bayesian networks implementation of knowledge
+tracing. in proc. intl. conf. user model. adapt.
+personalization, pages 255–266, june 2010.
+[28] j. reich, b. stewart, k. mavon, and d. tingley. the
+civic mission of moocs: measuring engagement across
+political differences in forums. in proc. acm conf.
+learn at scale, pages 1–10, apr. 2016.
+[29] m. san pedro, e. snow, r. baker, d. mcnamara, and
+n. heffernan. exploring dynamical assessments of
+affect, behavior, and cognition and math state test
+achievement. in proc. intl. conf. educ. data min.,
+pages 85–92, june 2015.
+[30] c. shi, s. fu, q. chen, and h. qu. vismooc:
+visualizing video clickstream data from massive open
+online courses. in ieee pacific visual. symp., pages
+159–166, apr. 2015.
+[31] s. slater, r. baker, j. ocumpaugh, p. inventado,
+p. scupelli, and n. heffernan. semantic features of
+math problems: relationships to student learning and
+engagement. in proc. intl. conf. educ. data min.,
+pages 223–230, june 2016.
+[32] s. tomkins, a. ramesh, and l. getoor. predicting
+post-test performance from online student behavior: a
+high school mooc case study. in proc. intl. conf.
+educ. data min., pages 239–246, june 2016.
+[33] a. vail, j. wiggins, j. grafsgaard, k. boyer, e. wiebe,
+and j. lester. the affective impact of tutor questions:
+predicting frustration and engagement. in proc. intl.
+conf. educ. data min., pages 247–254, june 2016.
+[34] x. wang, d. yang, m. wen, k. koedinger, and c. rosé.
+investigating how student’s cognitive behavior in
+mooc discussion forums affect learning gains. in proc.
+intl. conf. educ. data min., pages 226–233, june 2015.
+[35] j. whitehill, z. serpell, y. lin, a. foster, and
+j. movellan. the faces of engagement: automatic
+recognition of student engagement from facial
+expressions. ieee trans. affect. comput., 5(1):86–98,
+jan. 2014.
+[36] j. whitehill, j. williams, g. lopez, c. coleman, and
+j. reich. beyond prediction: towards automatic
+intervention in mooc student stop-out. in proc. intl.
+conf. educ. data min., pages 171–178, june 2015.
+[37] d. yang, r. kraut, and c. rosé. exploring the effect of
+student confusion in massive open online courses. j.
+educ. data min., 8(1):52–83, 2016.
+
+
+
+71
+
+efficient feature embeddings for student classification
+with variational auto-encoders
+severin klingler
+
+dept. of computer science
+eth zurich, switzerland
+
+kseverin@inf.ethz.ch
+
+rafael wampfler
+
+dept. of computer science
+eth zurich, switzerland
+
+wrafael@inf.ethz.ch
+
+barbara solenthaler
+
+dept. of computer science
+eth zurich, switzerland
+
+sobarbar@inf.ethz.ch
+
+abstract
+gathering labeled data in educational data mining (edm)
+is a time and cost intensive task. however, the amount
+of available training data directly influences the quality of
+predictive models. unlabeled data, on the other hand, is
+readily available in high volumes from intelligent tutoring
+systems and massive open online courses. in this paper, we
+present a semi-supervised classification pipeline that makes
+effective use of this unlabeled data to significantly improve
+model quality. we employ deep variational auto-encoders
+to learn efficient feature embeddings that improve the performance for standard classifiers by up to 28% compared
+to completely supervised training. further, we demonstrate
+on two independent data sets that our method outperforms
+previous methods for finding efficient feature embeddings
+and generalizes better to imbalanced data sets compared
+to expert features. our method is data independent and
+classifier-agnostic, and hence provides the ability to improve
+performance on a variety of classification tasks in edm.
+
+keywords
+semi-supervised classification, variational auto-encoder, deep
+neural networks, dimensionality reduction
+
+1.
+
+introduction
+
+building predictive models of student characteristics such
+as knowledge level, learning disabilities, personality traits
+or engagement is one of the big challenges in educational
+data mining (edm). such detailed student profiles allow
+for a better adaptation of the curriculum to the individual
+needs and is crucial for fostering optimal learning progress.
+in order to build such predictive models, smaller-scale and
+controlled user studies are typically conducted where detailed information about student characteristics are at hand
+(labeled data). the quality of the predictive models, however, inherently depends on the number of study participants, which is typically on the lower side due to time and
+budget constraints. in contrast to such controlled user studies, digital learning environments such as intelligent tutoring
+systems (its), educational games, learning simulations, and
+massive open online courses (moocs) produce high volumes
+of data. these data sets provide rich information about student interactions with the system, but come with no or only
+little additional information about the user (unlabeled data).
+
+tanja käser
+
+graduate school of education
+stanford university, usa
+
+tkaeser@stanford.edu
+markus gross
+
+dept. of computer science
+eth zurich, switzerland
+
+grossm@inf.ethz.ch
+
+semi-supervised learning bridges this gap by making use of
+patterns in bigger unlabeled data sets to improve predictions
+on smaller labeled data sets. this is also the focus of this
+paper. these techniques are well explored in a variety of
+domains and it has been shown that classifier performance
+can be improved for, e.g., image classification [15], natural language processing [28] or acoustic modeling [21]. in
+the education community, semi-supervised classification has
+been used employing self-training, multi-view training and
+problem-specific algorithms. self-training has e.g. been applied for problem-solving performance [22]. in self-training,
+a classifier is first trained on labeled data and is then iteratively retrained using its most confident predictions on unlabeled data. self-training has the disadvantage that incorrect predictions decrease the quality of the classifier. multiview training uses different data views and has been explored
+with co-training [27] and tri-training [18] for predicting prerequisite rules and student performance, respectively. the
+performance of these methods, however, largely depends on
+the properties of the different data views, which are not yet
+fully understood [34]. problem-specific semi-supervised algorithms have been used to organize learning resources in
+the web [19], with the disadvantage that they cannot be
+directly applied for other classification tasks.
+recently, it has been shown (outside of the education context) that variational auto-encoders (vae) have the potential to outperform the commonly used semi-supervised classification techniques. vae is a neural network that includes
+an encoder that transforms a given input into a typically
+lower-dimensional representation, and a decoder that reconstructs the input based on the latent representation. hence,
+vaes learn an efficient feature embedding (feature representation) using unlabeled data that can be used to improve the performance of any standard supervised learning
+algorithm [15]. this property greatly reduces the need for
+problem-specific algorithms. moreover, vaes feature the
+advantage that the trained deep generative models are able
+to produce realistic samples that allow for accurate data
+imputation and simulations [23], which makes them an appealing choice for edm. inspired by these advantages, and
+the demonstrated superior classifier performance in other
+domains as in computer vision [16, 23], this paper explores
+vae for student classification in the educational context.
+
+
+
+72
+
+we present a complete semi-supervised classification pipeline
+that employs deep vaes to extract efficient feature embeddings from unlabeled student data. we have optimized the
+architecture of two different networks for educational data a simple variational auto-encoder and a convolutional variational auto-encoder. while our method is generic and hence
+widely applicable, we apply the pipeline to the problem of
+detecting students suffering from developmental dyscalculia
+(dd), which is a learning disability in arithmetics. the large
+and unlabeled data set at hand consists of student data of
+more than 7k students and we evaluate the performance of
+our pipeline on two independent small and labeled data sets
+with 83 and 155 students. our evaluation first compares the
+performance of the two networks, where our results indicate
+superiority of the convolutional vae. we then apply different classifiers to both labeled data sets, and demonstrate
+not only improvements in classification performance of up to
+28% compared to other feature extraction algorithms, but
+also improved robustness to class imbalance when using our
+pipeline compared to other feature embeddings. the improved robustness of our vae is especially important for
+predicting relatively rare student conditions - a challenge
+that is often met in edm applications.
+
+2.
+
+background
+
+in the semi-supervised classification setting we have access
+to a large data set xb without labels and a much smaller
+labeled data set xs with labels ys . the idea behind semisupervised classification is to make use of patterns in the
+unlabeled data set to improve the quality of the classifier
+beyond what would be possible with the small data set
+xs alone. there are many different approaches to semisupervised classification including transductive svms, graphbased methods, self-training or representation learning [35].
+in this work we focus on learning an efficient encoding z =
+e(x) for x ∈ xb of the data domain using the unlabeled
+data xb only. this learnt data transformation e(·) - the
+encoding - is then applied to the labeled data set xs . wellknown encoders include principle component analysis (pca)
+or kernel pca (kpca). pca is a dimensionality reduction
+method that finds the optimal linear transformation from
+an n-dimensional to a k-dimensional space (given a meansquared error loss). kernel pca [24] extends pca allowing
+non-linear transformations into a k-dimensional space and
+has, among others, been successfully used for novelty detection in non-linear domains [11]. recently, variational autoencoders (vae) have outperformed other semi-supervised
+classification techniques on several data sets [15]. vae combine variational inference networks with generative models
+parametrized by deep neural networks that exploit information in the data density to find efficient lower dimensional
+representations (feature embeddings) of the data.
+auto-encoder. an auto-encoder or autoassociator [2] is a
+neural network that encodes a given input into a (typically
+lower dimensional) representation such that the original input can be reconstructed approximately. the auto-encoder
+consists of two parts. the encoder part of the network takes
+the n -dimensional input x ∈ rn and computes an encoding z = e(x) while the decoder d reconstructs the input
+based on the latent representation x̂ = d(z). if we train
+a network using the mean squared error loss and the network consists of a single linear hidden layer of size k, e.g.
+
+e(x) = w1 x + b1 and d(z) = w2 z + b2 for weights
+w1 ∈ rk×n and w2 ∈ rn ×k and offsets b1 ∈ rk and
+b2 ∈ rn , the autoencoder behaves similar to pca in that
+the network learns to project the input into the span of
+the k first principle components [2]. for more complex networks with non-linear layers multi-modal aspects of the data
+can be learnt. auto-encoders can be used in semi-supervised
+classification tasks because the encoder can compute a feature representation z of the original data x. these features
+can then be used to train a classifier. the learnt feature
+embedding facilitates classification by clustering related observations in the computed latent space.
+variational auto-encoder. variational auto-encoders [15]
+are generative models that combine bayesian inference with
+deep neural networks. they model the input data x as
+pθ (x|z) = f (x; z, θ)
+
+p(z) = n (z|0, i)
+
+(1)
+
+where f is a likelihood function that performs a non-linear
+transformation with parameters θ of z by employing a deep
+neural network. in this model the exact computation of
+the posterior pθ (z|x) is not computationally tractable. instead, the true posterior is approximated by a distribution
+qφ (z|x) [16]. this inference network qφ (z|x) is parametrized
+as a multivariate normal distribution as
+qφ (z|x) = n (z|µφ (x), diag(σφ2 (x))),
+
+(2)
+
+σφ2 (x)
+
+where µφ (x) and
+denote vectors of means and variance
+respectively. both functions µφ (·) and σφ2 (·) are represented
+as deep neural networks. hence, variational autoencoders
+essentially replace the deterministic encoder e(x) and decoder d(z) by a probabilistic encoder qφ (z|x) and decoder
+pθ (x|z). direct maximization of the likelihood is computationally not tractable, therefore a lower bound on the likelihood has been derived [16]. the learning task then amounts
+to maximizing this variational lower bound
+eqφ (z|x) [log pθ (x|z)] − kl [qφ (z|x)||p(z)] ,
+
+(3)
+
+where kl denotes the kullback-leibler divergence. the
+lower bound consists of two intuitive terms. the first term
+is the reconstruction quality while the second one regularizes the latent space towards the prior p(z). we perform
+optimization of this lower bound by applying a stochastic
+optimization method using gradient back-propagation [14].
+
+3.
+
+method
+
+in the following we introduce two networks. first, a simple
+variational auto-encoder consisting of fully connected layers to learn feature embeddings of student data. these encoders have shown to be powerful for semi-supervised classification [15], and are often applied due to their simplicity.
+second, an advanced auto-encoder that combines the advantages of vae with the superiority of asymmetric encoders.
+this is motivated by the fact that asymmetric auto-encoders
+have shown superior performance and more meaningful feature representations compared to simple vae in other domains such as image synthesis [29].
+student snapshots. there are many applications where
+we want to predict a label yn for each student n within an
+its based on behavioral data xn . these labels typically
+relate to external variables or properties of a student, such
+
+
+
+73
+
+simple student auto-encoder (s-sae)
+𝑞𝜙 𝒛 𝒙)
+
+x
+
+sampling connection
+
+x
+
+fc
+
+fully connected layer
+
+con
+con
+con
+
+fc
+
+network connection
+
+fc
+
+𝜎
+
+𝑧
+
+con
+con
+con
+
+𝜇
+
+fc
+
+fc
+
+x
+
+cnn student auto-encoder (cnn-sae)
+𝑞𝜙 𝒛 𝒙)
+
+𝑝𝜃 𝒙 𝒛)
+
+𝜇
+𝜎
+
+𝑝𝜃 𝒙 𝒛)
+lstm
+
+fc
+
+lstm
+
+fc
+
+𝑧
+
+lstm recurrent lstm
+
+x
+
+con
+
+convolutional layer
+
+figure 1: network layouts for our simple student auto-encoder (left) using only fully connected layers and our
+improved cnn student auto-encoder (right) using convolutions for the encoder and recurrent lstm layers
+for the decoder. in contrast to standard auto-encoders, the connections to the latent space z are sampled
+(red dashed arrows) from a gaussian distribution.
+
+as age, learning disabilities, personality traits, learner types,
+learning outcome etc. similar to knowledge tracing (kt)
+we propose to model the data xn = {xn1 , . . . , xnt } as a
+sequence of t observations. in contrast to kt we store f
+different feature values xnt ∈ rf for each element in the
+sequence, where t denotes the tth opportunity within a task.
+this allows us to simultaneously store data from multiple
+tasks in xnt , e.g. xn1 stores all features for student n that
+were observed during the first task opportunities. for every task in an its we can extract various different features
+that characterize how a student n was approaching the task.
+these features include performance, answer times, problem
+solving strategies, etc. we combine this information into a
+student snapshot xn ∈ rt ×f , where t is the number of task
+opportunities and f is the number of extracted features.
+simple student auto-encoder (s-sae). our simple variational autoencoder is following the general design outlined
+in section 2 and is based on the student snapshot representation. for ease of notation we use x := vec(xn ), where
+vec(·) is the matrix vectorization function to represent the
+student snapshot of student n. the complete network layout is depicted in figure 1, left. the encoder and decoder
+networks consist of l fully connected layers that are implemented as an affine transformation of the input followed by
+a non-linear activation function β(·) as xl = β(wl xl−1 +bl ),
+where l is the layer index and wl and bl are a weight matrix
+and offset vector of suitable dimensions. typical choices for
+β(·) include tanh, rectified linear units or sigmoid functions
+[6]. to produce latent samples z we sample from the normal
+distribution (see equation (2)) using re-parametrization [16]
+z = µφ (x) + σφ (x),
+
+(4)
+
+where  ∼ n (0, 1), to allow for back-propagation of gradients. for pθ (x|z) (see (1)) any suitable likelihood function can be used. we used a gaussian distribution for all
+presented examples. note that the likelihood function is
+parametrized by the entire (non-linear) decoder network.
+the training of variational auto-encoders can be challenging
+as stochastic optimization was found to set qφ (z|x) = p(z)
+in all but vanishingly rare cases [3], which corresponds to a
+local maximum that does not use any information from x.
+we therefore add a warm-up phase that gradually gives the
+regularization term in the target function more weight:
+eqφ (z|x) [log pθ (x|z)] − α kl [qφ (z|x)||p(z)] ,
+
+(5)
+
+where α ∈ [0, 1] is linearly increased with the number of
+epochs. the warm-up phase has been successfully used
+for training deep variational auto-encoders [25]. furthermore, we initialize the weights of the dense layer computing
+log(σφ2 (x)) to 0 (yielding a variance of 1 at the beginning of
+the training). this was motivated by our observations that if
+we employ standard random weight initialization techniques
+(glorot-norm, he-norm [9]) we can get relatively high initial
+estimates for the variance σφ2 (x), which due to the sampling
+leads to very unreliable samples z in the latent space. the
+large variance in sampled points in the latent space leads to
+bad convergence properties of the network.
+cnn student auto-encoder (cnn-sae). following
+the recent findings in computer vision we present a second,
+more advanced network that typically outperforms simpler
+vae. in [29], for example, these asymmetric auto-encoders
+resulted in superior reconstruction of images as well as more
+meaningful feature embeddings. a specific kind of convolutional neural network was combined with an auto-encoder,
+being able to directly capture low level pixel statistics and
+hence to extract more high-level feature embeddings.
+inspired by this previous work, we combine an asymmetric
+auto-encoder (and a decoder that is able to capture low level
+statistics) with the advantages of variational auto-encoders.
+figure 1, right, shows our combined network. we employ
+multiple layers of one-dimensional convolutions to parametrize
+the encoder qφ (z|x) (again we assume a gaussian distribution, see (2)). the distribution is parametrized as follows:
+µφ (x) = wµ h + bµ
+log(σφ2 (x)) = wσ h + bσ
+h = convl (x) = β(wl ∗ convl−1 (x)),
+
+where ∗ is the convolution operator, wl , wµ , wσ are weights
+of suitable dimensions, β(·) is a non-linear activation function and l denotes the layer depth. further, conv0 (x) = x.
+we keep the standard variational layer (see (4)) while changing the output layer to a recurrent layer using long term
+short term units (lstm). recurrent layers have successfully been used in auto-encoders before, e.g. in [5]. lstm
+were very successful for modeling temporal sequences because they can model long and short term dependencies between time steps. every lstm unit receives a copy of the
+sampled points in latent-space, which allows the lstm network to combine context information (point in the latent
+
+
+
+74
+
+feature
+selection
+
+naive bayes
+logistic regression
+svm
+
+labels
+
+𝑞𝜙 𝒛 𝒙)
+
+feature
+embedding
+
+labeled
+data
+
+𝑝𝜃 𝒙 𝒛)
+
+encoder
+unlabeled
+data
+
+𝑞𝜙 𝒛 𝒙)
+
+feature
+embedding
+
+unlabeled
+data
+
+semi-supervised classification pipeline
+encoder
+decoder
+
+use trained encoder
+
+figure 2: pipeline overview. we train the variational auto-encoder on a large unlabeled data set. the trained
+encoder of the auto-encoder can be used to transform other data sets into an expressive feature embedding.
+based on this feature embedding we train different classifiers to predict the student labels.
+
+space) with the sequence information (memory unit in the
+lstm cell). using lstm cells the decoder pθ (x|z) assumes
+a gaussian distribution and is parametrized as follows:
+µθt (z) = wµz · lstmt (z) + bµz
+
+4.1 experimental setup
+
+2
+log(σθt
+(z)) = wσz · lstmt (z) + bσz ,
+2
+where µθt (z) and σθt
+(z) are the tth components of µθ (z) and
+σθ2 (z), respectively, lstmt (·) denotes the tth lstm cell and
+w∗ and b∗ denote suitable weight and offset parameters.
+
+feature selection. vae provide a natural way for performing feature selection. the inference network qφ (z|x)
+infers the mean and variance for every dimension zi . therefore, the most informative dimension zi has the highest kl
+divergence from the prior distribution p(zi ) = n (0, 1) while
+uninformative dimensions will have a kl divergence close to
+0 [10]. the kl divergence of zi to p(zi ) is given by
+kl [qφ (zi |x)||p(zi )] = − log(σi ) +
+
+1
+σi2 µ2i
+− ,
+2
+2
+
+sets since their distribution of dd and non-dd children differs: the first study has approximately 50% dd, while the
+second one includes 5% dd (typical prevalence of dd).
+
+(6)
+
+where µi and σi are the inferred parameter for the gaussian
+distribution qφ (zi |x). feature selection proceeds by keeping
+the k dimensions zi with the largest kl divergence.
+semi-supervised classification pipeline. the encoder
+and the decoder of the variational auto-encoder can be used
+independently of each other. this independence allows us
+to take the trained encoder and map new data to the learnt
+feature embedding. figure 2 provides an overview of the
+entire pipeline for semi-supervised classification. in a first
+unsupervised step we train a vae on unlabeled data. the
+learnt encoder qφ (z|x) is then used to transform labeled data
+sets to the feature embedding. we finally apply our feature
+selection step that considers the relative importance of the
+latent dimensions as previously described. we then train
+standard classifiers (logistic regression, naive bayes and
+support vector machine) on the feature embeddings.
+
+4. results
+we evaluated our approach for the specific example of detecting developmental dyscalculia (dd), which is a learning
+disability affecting the acquisition of arithmetic skills [33].
+based on the learnt feature embedding on a large unlabeled
+data set the classifier performance was measured on two independent, small and labeled data sets from controlled user
+studies. we refer to them as balanced and imbalanced data
+
+all three data sets were collected from calcularis, which is
+an intelligent tutoring system (its) targeted at elementary
+school children suffering from dd or exhibiting difficulties
+in learning mathematics [13]. calcularis consists of different
+games for training number representations and calculation.
+previous work identified a set of games that are predictive
+of dd within calcularis [17]. since timing features were
+found to be one of the most relevant indicators for detecting
+dd [4] and to facilitate comparison to other feature embedding techniques we limited our analysis to log-normalized
+timing features, for which we can assume normal distribution [30]. therefore, we evaluated our pipeline on the subset of games from [17] for which meaningful timing features
+could be extracted and sufficient samples were available in all
+data sets (we used >7000 samples for training the vaes).
+since our pipeline currently does not handle missing data
+only students with complete data were included.
+timing features were extracted for the first 5 tasks in 5 different games. the selected games involve addition tasks
+(adding a 2-digit number to a 1-digit number with tencrossing; adding two 2-digit numbers with ten-crossing), number conversion (spoken to written numbers in the ranges 010 and 0-100) and subtraction tasks (subtracting a 1-digit
+number from a 2-digit number with ten-crossing). for every
+task we extracted the total answer time (time between the
+task prompt until the answer was entered) and the response
+time (time between the task prompt and the first input by
+the student). hence, each student is represented by a 50dimensional snapshot x (see section 3).
+unlabeled data set. the unlabeled data set was extracted
+using live interaction logs from the its calcularis. in total,
+we collected data from 7229 children. note that we have
+no additional information about the children such as dd or
+grade. we excluded all teacher accounts as well as log files
+that were < 20kb. since every new game in calcularis is
+introduced by a short video during the very first task, we
+excluded this particular task for all games.
+balanced data set. the first labeled data set is based
+on log files from 83 participants of a multi-center user study
+
+
+
+75
+
+conducted in germany and switzerland, where approximately
+half of the participants were diagnosed with dd (47 dd, 36
+control) [31]. during the study, children trained with calcularis at home for five times per week during six weeks and
+solved on average 1551 tasks. there were 28 participants
+in 2nd grade (9 dd, 19 control), 40 children in 3rd grade
+(23 dd, 17 control), 12 children in 4th grade (12 dd) and
+3 children in 5th grade (3 dd). the diagnosis of dd was
+based on standardized neuropsychological tests [31].
+imbalanced data set. the second labeled data set is from
+a user study conducted in the classroom of ten swiss elementary school classes. in total, 155 children participated, and
+a prevalence of dd of 5% could be detected (8 dd, 147 control). there were 97 children in 2nd grade (3 dd, 94 control)
+and 58 children in 3rd grade (5 dd, 53 control). the dd diagnosis was computed based on standardized tests assessing
+the mathematical abilities of the children [32, 7]. during the
+study, children solved 85 tasks directly in the classroom. on
+average, children needed 26 minutes to complete the tasks.
+implementation. the unlabeled data set was used to train
+the unsupervised vae for extracting compact feature embeddings of the data. based on the learnt data transformations we evaluated two standard classifiers: logistic regression (lr) and naive bayes (nb). we restricted our evaluation to simple classification models because we wanted to
+assess the quality of the feature embedding and not the quality of the classifier. more advanced classifiers typically perform a (sometimes implicit) feature transformation as part
+of their data fitting procedure. to represent at least one
+model that performs such an embedding we included support vector machine (svm) in all our results. all classifier
+parameters were chosen according to the default values in
+scikit-learn. note that we have additionally performed randomized cross-validated hyper-parameter search for all classifiers, which, however, resulted in marginal improvements
+only. because of that, and to keep the model simple and especially easily reproducible, we use the default parameter set
+in this work. for logistic regression we used l2 regularization with c = 1, for naive bayes we used gaussian distributions and for the svm rbf kernels and data point weights
+have been set inversely proportional to label frequencies. all
+results are cross-validated using 30 randomized training-test
+splits on the unlabeled data (test size 5%). the classification
+part of the pipeline is additionally cross-validated using 300
+label-stratified random training-test splits (test size 20%) to
+ensure highly reproducible classification results.
+network hyper-parameters were defined using the approach
+described in [1]. we increased the number of nodes per
+layer, the number of layers and the number of epochs until
+a good fit of the data was achieved. we then regularized
+the network using dropout [26] with increasing dropout rate
+until the network was no longer overfitting the data. activation and weight initialization have been chosen according to common standards: we employ the most common
+activation function, namely rectified linear activation units
+(relu) [20], for all activations. weight initialization was
+performed using the method by he et al. [9]. following this
+procedure, the following parameters were used for the ssae model: encoder and decoders used 3 layers of size 320.
+the cnn-sae model was parametrized as follows: 3 convo-
+
+lution layers with 64 convolution kernels and a filter length
+of 3. we used a single layer of lstm cells with 80 nodes.
+we used a batch size of 500 samples and batch normalization and dropout (r = 0.25) at every layer. the warm-up
+phase (see section 3) was set to 300 epochs. training was
+stopped after 1000 (s-sae) and 500 (cnn-sae) epochs.
+the number of latent units was set to 8 in accordance to
+previous work on detecting students with dd that used 17
+features but found that about half of the features were sufficient to detect dd with high accuracy [17]. when feature
+selection was applied we set the number of features to k = 4
+and thus we kept exactly half of the latent space features.
+all networks were implemented using the keras framework
+with tensorflowtm and optimized using adam stochastic
+optimization with standard parameters according to [14].
+
+4.2
+
+performance comparison
+
+our vae models are trained to extract efficient feature embeddings of the data. to assess the quality of these computed feature representations, we compare the classification
+performance of our method to previous techniques for finding efficient feature embeddings, as well as to feature sets
+optimized specifically for the task of predicting dd.
+network comparison. in a first experiment we compared
+the feature embeddings generated by our simple s-sae and
+our asymmetric cnn-sae with and without feature selection. figure 3 illustrates the average roc curves of our
+complete semi-supervised classification pipeline. our feature embeddings based on asymmetric cnn-sae clearly
+outperform the ones from the simple s-sae on both the
+imbalanced and the balanced data set for naive bayes (nb)
+and logistic regression (lr). for both models, feature selection improves the area under the roc curve (auc) for
+the imbalanced data set (cnn-sae: lr 4.2%, nb 6.3%;
+s-sae: lr 6.8%, nb: 1.6%), but has no effect for the balanced data set. we believe that this is due to the ability of
+the classifiers to distinguish useful features from noisy ones
+given enough samples. since the performance of the classifiers with feature selection (fs) is better or equal to no
+feature selection in each experiment, we used the cnn-sae
+fs model for all further evaluations.
+classification performance. in figure 4 we compare the
+classifier performance for different feature embeddings. we
+compare our method based on vae to two well-known methods for finding optimal feature embeddings, namely principle
+component analysis (pca, green) and kernel pca (kpca,
+red) [24]. for comparison and as a baseline for the performance of the different methods, we include direct classification results (gray), for which no feature embedding was
+computed. we used k = 8 (dimensionality of feature embedding) for all methods. the features extracted by our
+pipeline compare favorably to pca and kernel pca showing improvements in terms of auc of 28% for logistic regression and 23% for naive bayes on the imbalanced data
+set and an improvement of 3.75% for logistic regression
+and 7.5% for naive bayes on the balanced data set. by
+using simple classifiers, we demonstrated that our encoder
+learns an effective feature embedding. more sophisticated
+classifiers (such as svm with non-linear kernels) typically
+proceed by first embedding the input into a specific feature
+space that is different from the original space.
+
+
+
+76
+
+logistic regression
+
+1.0
+cnn-sae
+cnn-sae
+0.8 fs
+s-sae
+s-sae
+0.6 fs
+
+0.8
+
+true positive rate
+
+true positive rate
+
+1.0
+
+0.6
+0.4
+0.2
+0.0
+0.0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+cnn-sae
+cnn-sae fs
+s-sae
+s-sae fs
+
+0.4
+0.2
+0.0
+0.0
+
+1.0
+
+naive bayes
+
+false positive rate
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1.0
+
+false positive rate
+
+(a) imbalanced data set
+logistic regression
+
+1.0
+cnn-sae
+cnn-sae
+0.8 fs
+s-sae
+s-sae
+0.6 fs
+
+0.8
+
+true positive rate
+
+true positive rate
+
+1.0
+
+0.6
+0.4
+0.2
+0.0
+0.0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+false positive rate
+
+1.0
+
+naive bayes
+cnn-sae
+cnn-sae fs
+s-sae
+s-sae fs
+
+0.4
+0.2
+0.0
+0.0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1.0
+
+false positive rate
+
+(b) balanced data set
+figure 3: roc curves for the two proposed models with and without feature selection (fs). our
+asymmetric cnn-sae outperforms the simple ssae consistently with (blue) and without (purple)
+feature selection. feature selection improves performance only on the imbalanced data set.
+
+for the imbalanced data set the overall performance for
+svm is significantly lower for all embeddings. this is in line
+with previous work [12] showing that for imbalanced data
+sets, the decision boundaries of svms are heavily skewed
+towards the minority class resulting in a preference for the
+majority class and thus a high miss-classification rate for the
+minority class. indeed, we found that svm predicted only
+majority labels on the imbalanced data set. for the balanced data set our feature embedding shows improvements
+of 2.5% over alternative embeddings when using svm.
+further, table 1 shows the performance of all feature embeddings using three additional common classification metrics:
+root mean squared error (rmse), classification accuracy
+(acc.) and area under the precision recall curve (aupr).
+we statistically compared the classification metrics of our
+feature embedding to the best alternative feature embedding using an independent t-test and bonferroni correction
+for multiple tests (α = 0.05). our feature embedding significantly outperformed alternative embeddings for all classifiers on both the balanced and imbalanced data sets on most
+metrics. the main exception was the performance of svm
+on the imbalanced data set, which exhibited large variance
+for all feature embeddings and the worst overall classification performance (compared to the other classifiers).
+when comparing classification performance on the imbalanced and the balanced data sets we observed that our
+pipeline using vaes showed significant performance improvements compared to other methods for finding feature embeddings. while the unlabeled and the balanced data sets stem
+from an adaptive version of calcularis the imbalanced data
+was collected using a fixed task sequence. as our method
+shows larger improvements on the imbalanced data, we be-
+
+lieve cnn-sae learned an embedding that is robust beyond
+adaptive its. the relative improvements of our feature embeddings is smallest for svm on the balanced data set. we
+believe that this is due to ability of the svm to learn complex decision boundaries given sufficient data. however, the
+ability for complex decision boundaries renders svms more
+vulnerable to class imbalance, yielding performance at random level on the imbalanced data set.
+comparison to specialized models. recently, a specialized naive bayes classifier (s-nb) for the detection of
+developmental dyscalculia (dd) was introduced presenting
+a set of features optimized for the detection of dd [17].
+the development of s-nb including the set of features was
+based on the balanced data set used in this work. in comparison to s-nb, our approach relies on timing data only
+and the extracted features are independent of the classification task. we compared the performance of s-nb to our
+cnn-sae model on both data sets. for the balanced data
+set we found an auc of 0.94 for the specialized model (snb) compared to an auc of 0.86 for naive bayes using our
+feature embedding. on the imbalanced data set we found
+an auc of 0.67 for s-nb compared to an auc of 0.77 using logistic regression with our feature embedding. these
+findings demonstrate that while our feature embedding performs slightly worse on the balanced data set (for which the
+s-nb was developed), we significantly outperform s-nb by
+15% on the imbalanced data set, which suggests that our
+vae model automatically extracts feature embeddings that
+are more robust than expert features.
+robustness on sample size. ideally, a classifier’s performance should gracefully decrease as fewer data is provided.
+a good feature embedding allows a classifier to generalize
+well based on few labeled examples because similar samples
+are clustered together in the feature embedding. we therefore investigated the robustness of the different feature representations with respect to the training set size. for this we
+used the balanced data set where we varied the training set
+size between 7 (10% of the data) and 62 (90% of the data)
+by random label-stratified sub-sampling. figure 5 compares
+the auc of the different feature embeddings over different
+sizes of the training set. in case of naive bayes and logistic regression our embedding provides superior performance
+for all training set sizes. for large enough data sets svm
+using the raw feature data (direct, grey) is performing as
+well as using our embedding (cnn-sae, blue). however,
+for smaller data sets starting at 30 samples the performance
+of svm based on the raw features declines more rapidly
+compared to the svm based on our feature embedding.
+
+5.
+
+conclusion
+
+we adapted the recently developed variational auto-encoders
+to educational data for the task of semi-supervised classification of student characteristics. we presented a complete pipeline for semi-supervised classification that can be
+used with any standard classifier. we demonstrated that extracted structures from large scale unlabeled data sets can
+significantly improve classification performance for different
+labeled data sets. our findings show that the improvements
+are especially pronounced for small or imbalanced data sets.
+imbalanced data sets typically arise in edm when detecting
+relatively rare conditions such as learning disabilities. im-
+
+
+
+77
+
+ , p e d o d q f h g  g d w d  v h w
+
+ 1 d l y h  % d \ h v
+
+    
+ ' l u h f w
+     3 & $
+     . h u q h o  3 & $
+     & 1 1  6 $ (
+    
+    
+    
+    
+    
+
+ % d o d q f h g  g d w d  v h w
+
+ $ 8 &
+
+ $ 8 &
+
+ $ 8 &
+
+ / r j l v w l f  5 h j u h v v l r q
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+ , p e d o d q f h g  g d w d  v h w
+
+ v r x u f h
+
+ 6 9 0
+
+    
+ ' l u h f w
+     3 & $
+     . h u q h o  3 & $
+     & 1 1  6 $ (
+    
+    
+    
+    
+    
+
+ % d o d q f h g  g d w d  v h w
+
+ ' l u h f w
+ 3 & $
+ . h u q h o  3 & $
+ & 1 1  6 $ (
+
+ , p e d o d q f h g  g d w d  v h w
+
+ v r x u f h
+
+ % d o d q f h g  g d w d  v h w
+
+ v r x u f h
+
+logistic regression
+
+0
+
+10
+
+20
+
+30
+
+40
+
+50
+
+60
+
+70
+
+0.90
+direct
+0.85pca
+0.80kernel pca
+cnn-sae
+0.75
+0.70
+0.65
+0.60
+0.55
+0.50
+0
+10
+
+number of training samples
+
+naive bayes
+
+auc
+
+0.90
+0.85
+0.80
+0.75
+0.70
+0.65
+0.60
+0.55
+0.50
+
+auc
+
+auc
+
+figure 4: classification performance for different feature embeddings. our variational auto-encoder (blue)
+outperforms other embeddings by up to 28% (imbalanced data set) and by up to 7.5% (balanced data set).
+
+20
+
+30
+
+40
+
+50
+
+60
+
+70
+
+0.90
+direct
+0.85pca
+0.80kernel pca
+cnn-sae
+0.75
+0.70
+0.65
+0.60
+0.55
+0.50
+0
+10
+
+number of training samples
+
+svm
+direct
+pca
+kernel pca
+cnn-sae
+
+20
+
+30
+
+40
+
+50
+
+60
+
+70
+
+number of training samples
+
+figure 5: comparison of classifier performance on the balanced data for different training set sizes (moving
+average fitted to data points). the features automatically extracted by our variational auto-encoder (blue)
+maintain a performance advantage even if the training size shrinks to 7 samples (10% of the original size).
+
+table 1: comparison of our method to alternative embeddings. our approach using a variational auto-encoder
+(cnn-sae) significantly outperforms other approaches for most cases. the best score for each metric and
+classifier is shown in bold. *= statistically significant difference (t-test with bonferroni correction, α = 0.05).
+direct
+auc rmse
+
+aupr
+
+acc.
+
+pca
+auc rmse
+
+aupr
+
+acc.
+
+kernel pca
+auc rmse
+
+aupr
+
+acc.
+
+cnn-sae
+auc
+rmse
+
+aupr
+
+acc.
+
+imbalanced data set
+logistic regression
+naive bayes
+svm
+
+0.53
+0.51
+0.55
+
+0.27
+0.29
+0.25
+
+0.18
+0.23
+0.22*
+
+0.91
+0.91
+0.94
+
+0.54
+0.50
+0.40
+
+0.25
+0.29
+0.25
+
+0.17
+0.10
+0.08
+
+0.93
+0.90
+0.94
+
+0.61
+0.57
+0.42
+
+0.25
+0.28
+0.25
+
+0.16
+0.20
+0.09
+
+0.93
+0.91
+0.93
+
+0.78*
+0.70*
+0.59
+
+0.24*
+0.25*
+0.25
+
+0.28*
+0.24
+0.16
+
+0.94*
+0.93*
+0.94
+
+balanced data set
+logistic regression
+naive bayes
+svm
+
+0.80
+0.80
+0.81
+
+0.44
+0.49
+0.42
+
+0.82
+0.80
+0.84*
+
+0.73
+0.73
+0.75
+
+0.80
+0.77
+0.79
+
+0.42
+0.46
+0.43
+
+0.84
+0.77
+0.81
+
+0.73
+0.71
+0.73
+
+0.80
+0.76
+0.80
+
+0.42
+0.46
+0.43
+
+0.83
+0.76
+0.83
+
+0.75
+0.70
+0.73
+
+0.83*
+0.86*
+0.83
+
+0.40*
+0.38*
+0.40*
+
+0.84
+0.86*
+0.81
+
+0.77
+0.80*
+0.79*
+
+proved classification results with simple classifiers such as
+logistic regression might indicate that vaes learn feature
+embeddings that are interpretable by human experts. in
+the future we want to explore the learnt representations and
+compare it to traditional categorizations of students (skills,
+performance, etc.). additionally, we want to extend our
+results to include additional feature types and data reliability indicators to handle missing data. although we trained
+our networks on comparatively small sample sizes, the presented method scales (due to mini-batch learning) to much
+larger data sets (>100k users ) allowing the training of more
+complex vae. moreover, the generative model pθ (x|z) that
+is part of any vae can be used to produce realistic data
+samples [29]. up-sampling of the minority class provides a
+potential way to improve the decision boundaries for classi-
+
+fiers. in contrast to common up-sampling methods such as
+adasyn [8], vae-based sampling does not require nearest
+neighbor computations which makes them better applicable
+to small data sets. preliminary results for random subsets
+of the balanced data set showed improvements in auc by
+up-sampling based on vae of 2-3% compared to adasyn.
+while we applied our method to the specific case of detecting
+developmental dyscalculia, the presented pipeline is generic
+and thus can be applied to any educational data set and
+used for the detection of any student characteristic.
+acknowledgments. this work was supported by eth
+research grant eth-23 13-2.
+
+6.
+
+references
+
+
+
+78
+
+[1] y. bengio. practical recommendations for gradientbased training of deep architectures. in neural
+networks: tricks of the trade, pages 437–478. 2012.
+[2] y. bengio et al. learning deep architectures for ai.
+foundations and trends in machine learning, 2009.
+[3] s. r. bowman, l. vilnis, o. vinyals, a. dai,
+r. jozefowicz, and s. bengio. generating sentences
+from a continuous space. in proc. conll, pages
+10–21, 2016.
+[4] b. butterworth. dyscalculia screener. nelson
+publishing company ltd., 2003.
+[5] o. fabius and j. r. van amersfoort. variational
+recurrent auto-encoders. in proc. iclr, 2015.
+[6] i. goodfellow, y. bengio, and a. courville. deep
+learning. mit press, 2016.
+[7] j. haffner, k. baro, p. parzer, and f. resch.
+heidelberger rechentest: erfassung mathematischer
+basiskomptenzen im grundschulalter, 2005.
+[8] h. he, y. bai, e. a. garcia, and s. li. adasyn:
+adaptive synthetic sampling approach for imbalanced
+learning. in proc. ijcnn, pages 1322–1328, 2008.
+[9] k. he, x. zhang, s. ren, and j. sun. delving deep
+into rectifiers: surpassing human-level performance on
+imagenet classification. in proc. iccv, pages
+1026–1034, 2015.
+[10] i. higgins, l. matthey, x. glorot, a. pal, b. uria,
+c. blundell, s. mohamed, and a. lerchner. early
+visual concept learning with unsupervised deep
+learning. arxiv preprint arxiv:1606.05579, 2016.
+[11] h. hoffmann. kernel pca for novelty detection.
+pattern recognition, pages 863–874, 2007.
+[12] t. imam, k. ting, and j. kamruzzaman. z-svm: an
+svm for improved classification of imbalanced data. ai
+2006: advances in artificial intelligence, pages
+264–273, 2006.
+[13] t. käser, g.-m. baschera, j. kohn, k. kucian,
+v. richtmann, u. grond, m. gross, and m. von aster.
+design and evaluation of the computer-based training
+program calcularis for enhancing numerical cognition.
+frontiers in developmental psychology, 2013.
+[14] d. kingma and j. ba. adam: a method for stochastic
+optimization. proc. iclr, 2015.
+[15] d. p. kingma, s. mohamed, d. j. rezende, and
+m. welling. semi-supervised learning with deep
+generative models. in proc. nips, pages 3581–3589,
+2014.
+[16] d. p. kingma and m. welling. auto-encoding
+variational bayes. proc. iclr, 2014.
+[17] s. klingler, t. käser, a. busetto, b. solenthaler,
+j. kohn, m. von aster, and m. gross. stealth
+assessment in its - a study for developmental
+dyscalculia. in proc. its, pages 79–89, 2016.
+[18] g. kostopoulos, s. b. kotsiantis, and p. b. pintelas.
+predicting student performance in distance higher
+education using semi-supervised techniques. in proc.
+medi, pages 259–270, 2015.
+[19] i. labutov and h. lipson. web as a textbook:
+curating targeted learning paths through the
+heterogeneous learning resources on the web. in
+proc. edm, pages 110–118, 2016.
+[20] y. lecun, y. bengio, and g. hinton. deep learning.
+
+nature, pages 436–444, 2015.
+[21] h. liao, e. mcdermott, and a. senior. large scale
+deep neural network acoustic modeling with
+semi-supervised training data for youtube video
+transcription. in proc. asru, pages 368–373, 2013.
+[22] w. min, b. w. mott, j. p. rowe, and j. c. lester.
+leveraging semi-supervised learning to predict student
+problem-solving performance in narrative-centered
+learning environments. in proc. its, pages 664–665,
+2014.
+[23] d. j. rezende, s. mohamed, and d. wierstra.
+stochastic backpropagation and approximate
+inference in deep generative models. in proc. icml,
+pages 1278–1286, 2014.
+[24] b. schölkopf, a. smola, and k.-r. müller. kernel
+principal component analysis. in proc. icann, pages
+583–588, 1997.
+[25] c. k. sønderby, t. raiko, l. maaløe, s. k. sønderby,
+and o. winther. ladder variational autoencoders. in
+proc. nips, pages 3738–3746, 2016.
+[26] n. srivastava, g. e. hinton, a. krizhevsky,
+i. sutskever, and r. salakhutdinov. dropout: a simple
+way to prevent neural networks from overfitting.
+jmlr, pages 1929–1958, 2014.
+[27] v. tam, e. y. lam, s. fung, w. fok, and a. h. yuen.
+enhancing educational data mining techniques on
+online educational resources with a semi-supervised
+learning approach. in proc. tale, pages 203–206,
+2015.
+[28] j. turian, l. ratinov, and y. bengio. word
+representations: a simple and general method for
+semi-supervised learning. in proc. acl, pages
+384–394, 2010.
+[29] a. van den oord, n. kalchbrenner, l. espeholt,
+o. vinyals, a. graves, et al. conditional image
+generation with pixelcnn decoders. in proc. nips,
+pages 4790–4798, 2016.
+[30] w. j. van der linden. a lognormal model for response
+times on test items. journal of educational and
+behavioral statistics, 31(2):181–204, 2006.
+[31] m. von aster, l. rauscher, k. kucian, t. käser,
+u. mccaskey, and j. kohn. calcularis - evaluation of
+a computer-based learning program for enhancing
+numerical cognition for children with developmental
+dyscalculia, 2015. 62nd annual meeting of the
+american academy of child and adolescent
+psychiatry.
+[32] m. von aster, m. w. zulauf, and r. horn.
+neuropsychologische testbatterie für
+zahlenverarbeitung und rechnen bei kindern:
+zareki-r. pearson, 2006.
+[33] m. g. von aster and r. s. shalev. number
+development and developmental dyscalculia.
+developmental medicine & child neurology, pages
+868–873, 2007.
+[34] c. xu, d. tao, and c. xu. a survey on multi-view
+learning. neural comput. appl., pages 2031–2038,
+2013.
+[35] x. zhu. semi-supervised learning literature survey.
+technical report, university of wisconsin-madison,
+2006.
+
